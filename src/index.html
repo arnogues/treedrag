@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Treedrag</title>
+  <link rel="stylesheet" href="style/treedrag.css"/>
+
+  <script src="vendor/jquery-1.10.2.js"></script>
+  <script src="script/treedrag.Treedrag.js"></script>
+  <script src="script/treedrag.DragDrop.js"></script>
+  <script src="script/treedrag.PropertiesSetter.js"></script>
+
+  <script>
+    $(function() {
+      $('.treedrag').treedrag();
+    });
+  </script>
+</head>
+<body>
+
+<div class="treedrag">
+  <div class="treedrag-zone">
+    <h1>Zone 1</h1>
+    <ul>
+      <li data-id="cat1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc1.1"><h2>Accessory 1</h2>
+            <ul>
+              <li data-id="sub1.1.1">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat2">
+        <h2 class="dragTitle">Category 2</h2>
+        <ul>
+          <li data-id="acc2.1">
+            <h3>Accessory 2.1</h3>
+            <ul>
+              <li data-id="sub2.1.1">sub cat for the fun</li>
+            </ul>
+          </li>
+          <li data-id="acc2.2">
+            <h3>Accessory 2.2</h3>
+            <ul>
+              <li data-id="sub2.2.1">sub cat for the fun</li>
+            </ul>
+          </li>
+          <li data-id="acc2.3">
+            <h3>Accessory 2.3</h3>
+            <ul>
+              <li data-id="sub2.3.1">sub cat for the fun</li>
+            </ul>
+          </li>
+          <li data-id="acc2.4">
+            <h3>Accessory 2.4</h3>
+            <ul>
+              <li data-id="sub2.4.1">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat3">
+        <h2 class="dragTitle">Category 3</h2>
+        <ul>
+          <li data-id="acc3.1">
+            <h3>Accessory 3.1</h3>
+            <ul>
+              <li data-id="sub3.1.1">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat4">
+        <h2 class="dragTitle">Category 4</h2>
+        <ul>
+          <li data-id="acc4.1">
+            <h3>Accessory 1</h3>
+            <ul>
+              <li data-id="sub4.1.1">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="treedrag-zone">
+    <h1>Zone 2</h1>
+    <ul>
+      <li data-id="cat1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc1.1"><h2>Accessory 1</h2>
+            <ul>
+              <li data-id="sub1.1.1">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+
+</body>
+</html>

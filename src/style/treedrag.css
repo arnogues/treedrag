@@ -1,0 +1,25 @@
+.treedrag {
+    zoom: 1;
+}
+
+.treedrag:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.treedrag-zone {
+    float: left;
+    width:50%;
+}
+
+.treedrag-phantom {
+    filter:alpha(opacity=40);
+    opacity:0.4;
+}
+
+.treedrag-dragging {
+
+}
+
+
