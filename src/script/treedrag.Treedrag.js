@@ -29,6 +29,8 @@ Treedrag.prototype = {
       new PropertiesSetter(this, {
         zoneId: this.zoneId
       });
+
+      new DragDrop(this);
     });
   },
 
@@ -37,6 +39,9 @@ Treedrag.prototype = {
   }
 };
 
+/**
+ * jquery plugin declaration
+ */
 $.fn.treedrag = function () {
   $(this).each(function (options) {
     $(this).data('treedrag', new Treedrag(this, options));
