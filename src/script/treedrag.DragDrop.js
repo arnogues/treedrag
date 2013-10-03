@@ -41,7 +41,7 @@ DragDrop.prototype = {
     });
   },
 
-  onDroppableEnter: function (e,droppable) {
+  onDroppableEnter: function (e, droppable) {
     this.currentDroppable = $(droppable);
     if (this.isDragging) {
       this.saveSameLevelElementsPositions();
@@ -141,7 +141,7 @@ DragDrop.prototype = {
     if (keepElm) {
       this.draggedElementPhantom.insertAfter(keepElm.elm);
     } else {
-      if(this.draggableElementsToCheck.length>0) {
+      if (this.draggableElementsToCheck.length > 0) {
         this.draggedElementPhantom.insertBefore(this.draggableElementsToCheck[0].elm);
       } else {
         this.currentDroppable.append(this.draggedElementPhantom);
@@ -175,7 +175,10 @@ DragDrop.prototype = {
   },
 
   saveAllDroppablePositions: function () {
-    this.droppablesList = this.$element.find('.treedrag-droppable[data-droppable-accept=' + this.currentDraggedElement.data('draggable-type') + ']');
+    var _this = this;
+    this.droppablesList = this.$element.find('.treedrag-droppable').filter(function () {
+      return $(this).data('droppable-accept') == _this.currentDraggedElement.data('draggable-type')
+    });
     this.droppablesList.addClass('treedrag-droppable-isaccepting')
   }
 };

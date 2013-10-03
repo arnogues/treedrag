@@ -116,5 +116,5 @@ body {
 }
 .treedrag-droppable-isaccepting {
     min-height: 10px;
-    background-color: #666 !important;
+    background-color: #999 !important;
 }
