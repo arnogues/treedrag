@@ -31,7 +31,7 @@ Toggler.prototype = {
     var el = e.currentTarget,
         $ul = $(el).parent().find('ul:first');
 
-      $ul.animate({
+      $ul.stop().dequeue().animate({
         'height': $ul.height() == 0 ? $ul[0].scrollHeight : 0
       }, 500);
   }
