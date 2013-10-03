@@ -160,6 +160,10 @@ DragDrop.prototype = {
   /* =========================
    * Droppable methods
    ========================= */
+  checkDroppableAccep:function() {
+
+  },
+
   getCurrentDroppableWhileDragging: function (props) {
     var droppable, keepElm, droppablePosition, top = props.top, left = props.left;
     if (this.isDragging) {
