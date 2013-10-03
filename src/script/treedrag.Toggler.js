@@ -11,7 +11,7 @@ var Toggler = function () {
 Toggler.prototype = {
   constructor: Toggler.prototype.constructor,
   options: {
-    limitToParent:true
+    limitToParent: true
   },
 
   zoneId: 0,
@@ -24,13 +24,16 @@ Toggler.prototype = {
   },
 
   addEvents: function () {
-    this.$element.on('click', 'ul .treedrag-toggle', $.proxy(this.onTogglerClick,this));
+    this.$element.on('click', 'ul .treedrag-toggle', $.proxy(this.onTogglerClick, this));
   },
 
-  onTogglerClick:function(e) {
-    var el = e.currentTarget;
+  onTogglerClick: function (e) {
+    var el = e.currentTarget,
+        $ul = $(el).parent().find('ul:first');
 
-    $(el).parent().find('ul:first').toggle(200);
+      $ul.animate({
+        'height': $ul.height() == 0 ? $ul[0].scrollHeight : 0
+      }, 500);
   }
 };
 

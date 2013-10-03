@@ -12,7 +12,9 @@ body {
     content: "";
     display: table;
 }
-
+.treedrag ul {
+    overflow: hidden;
+}
 .treedrag ul, .treedrag li {
     margin: 0;
     padding: 0;

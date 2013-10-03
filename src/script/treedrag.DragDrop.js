@@ -25,7 +25,10 @@ DragDrop.prototype = {
   addEvents: function () {
     var _this = this;
     this.$element.on('mousedown', '.treedrag-draggable', function (e) {
-      _this.startDrag(e, this);
+      e.preventDefault();
+      e.stopPropagation();
+      _this.isWaitingDrag = true;
+      _this.currentDraggedElement = $(this);
     });
 
     $(document)
@@ -33,6 +36,7 @@ DragDrop.prototype = {
           _this.stopDrap(e);
         })
         .on('mousemove', function (e) {
+          _this.startDrag(e, this);
           _this.move(e);
         });
 
@@ -51,31 +55,37 @@ DragDrop.prototype = {
   startDrag: function (e, elm) {
     e.preventDefault();
     e.stopPropagation();
-    var $elm = $(elm);
-    //init dragging and save main infos
-    this.isDragging = true;
-    this.currentDraggedElement = $elm;
-    this.startMouseOffset = {
-      left: e.pageX - $elm.position().left,
-      top: e.pageY - $elm.position().top
-    };
-    //create phantom
-    var phantom = this.draggedElementPhantom = $elm.clone();
-    phantom.addClass('treedrag-phantom');
-    $elm.after(phantom);
+    if (this.isWaitingDrag) {
+      this.isWaitingDrag = false;
+      var $elm = this.currentDraggedElement;
+      //init dragging and save main infos
+      this.isDragging = true;
+      //this.currentDraggedElement = $elm;
+      this.startMouseOffset = {
+        left: e.pageX - $elm.position().left,
+        top: e.pageY - $elm.position().top
+      };
+      //create phantom
+      var phantom = this.draggedElementPhantom = $elm.clone();
+      phantom.addClass('treedrag-phantom');
+      $elm.after(phantom);
 
-    //set props and move the $elm to the parent this.$element to avoid problems of z-index with ie7
-    $elm.addClass('treedrag-isdragging');
-    $elm.css('width', phantom.width());
-    this.$element.append($elm);
+      //set props and move the $elm to the parent this.$element to avoid problems of z-index with ie7
+      $elm.addClass('treedrag-isdragging');
+      $elm.css('width', phantom.width());
+      this.$element.append($elm);
 
-    this.saveAllDroppablePositions();
-    this.saveSameLevelElementsPositions();
-    this.move(e);
+      this.saveAllDroppablePositions();
+      this.saveSameLevelElementsPositions();
+      this.move(e);
+    }
+
   },
 
   stopDrap: function (e) {
+    //setTimeout($.proxy(function() {
     e.preventDefault();
+    this.isWaitingDrag = false;
     if (this.isDragging) {
       this.isDragging = false;
       //reset styles and put the element at it's previous place
@@ -87,9 +97,11 @@ DragDrop.prototype = {
           })
           .removeClass('treedrag-isdragging');
       this.draggedElementPhantom.replaceWith(this.currentDraggedElement);
+      this.$element.find('.treedrag-phantom').remove();
       this.draggableElementsToCheck = [];
       this.droppablesList.removeClass('treedrag-droppable-isaccepting');
     }
+    //},this),10);
   },
 
   move: function (e) {
@@ -113,7 +125,7 @@ DragDrop.prototype = {
     listElm = this.currentDroppable
         .find('.treedrag-draggable')
         .not('.treedrag-phantom').not(this.currentDraggedElement)
-        .filter(function( ){
+        .filter(function () {
           return $(this).data('draggable-type') == _this.currentDraggedElement.data('draggable-type');
         });
     this.draggableElementsToCheck = listElm
@@ -149,7 +161,7 @@ DragDrop.prototype = {
       if (this.draggableElementsToCheck.length > 0) {
         this.draggedElementPhantom.insertBefore(this.draggableElementsToCheck[0].elm);
       } else {
-        if(!this.options.limitToParent || fthis.options.limitToParent && this.currentDroppable.data('droppable-accept') == this.draggedElementPhantom.data('draggable-type')) {
+        if (!this.options.limitToParent || this.options.limitToParent && this.currentDroppable.data('droppable-accept') == this.draggedElementPhantom.data('draggable-type')) {
           this.currentDroppable.append(this.draggedElementPhantom);
         }
       }
@@ -160,7 +172,7 @@ DragDrop.prototype = {
   /* =========================
    * Droppable methods
    ========================= */
-  checkDroppableAccep:function() {
+  checkDroppableAccept: function () {
 
   },
 
