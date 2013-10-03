@@ -58,6 +58,9 @@
           _this.applyProperties(firstUl, level+1, id);
         }
       });
+
+      // set toggle classes for Toggler object
+      $(ul).find('h2').addClass('treedrag-toggle');
     }
   };
 })();

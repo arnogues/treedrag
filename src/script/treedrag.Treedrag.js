@@ -37,6 +37,8 @@ Treedrag.prototype = {
     new DragDrop(this.$element,{
       limitToParent:_this.options.limitToParent
     });
+
+    new Toggler(this.$element);
   },
 
   addEvents: function () {
