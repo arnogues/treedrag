@@ -40,13 +40,15 @@
       $(ul)
           .attr({
             'data-droppable': true,
-            'data-droppable-accept': newLevel
+            'data-droppable-accept': newLevel,
+            'data-level':level
           })
           .addClass('treedrag-droppable');
       $(ul).children().each(function () {
         $(this)
             .attr({
               'data-draggable': true,
+              'data-level':level,
               'data-draggable-type': newLevel
             })
             .addClass('treedrag-draggable');

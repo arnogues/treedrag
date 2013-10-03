@@ -172,7 +172,7 @@ DragDrop.prototype = {
   /* =========================
    * Droppable methods
    ========================= */
-  checkDroppableAccept: function () {
+  checkDroppableParents: function () {
 
   },
 
@@ -185,7 +185,7 @@ DragDrop.prototype = {
         for (var i = 0; i < list.length; i++) {
           droppable = $(list[i]);
           droppablePosition = droppable.position();
-          if (top >= droppablePosition.top && left >= droppablePosition.left- offset) {
+          if (top >= droppablePosition.top && left >= droppablePosition.left - offset) {
             keepElm = droppable;
           }
         }
@@ -203,6 +203,12 @@ DragDrop.prototype = {
     this.droppablesList = this.$element.find('.treedrag-droppable').filter(function () {
       return $(this).data('droppable-accept') == _this.currentDraggedElement.data('draggable-type')
     });
+    //this.droppablesList = this.$element.find('.treedrag-droppable');
+    /*var level = _this.currentDraggedElement.data('level');
+    this.droppablesList = this.$element.find('.treedrag-droppable').filter(function () {
+      return $(this).data('level') <= level
+    });*/
+    //console.log(this.droppablesList);
     this.droppablesList.addClass('treedrag-droppable-isaccepting')
   }
 };
