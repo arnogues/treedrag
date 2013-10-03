@@ -9,7 +9,7 @@ var Treedrag = function () {
 Treedrag.prototype = {
   constructor: Treedrag.prototype.constructor,
   options: {
-    limitToParent:false
+    limitToParent:true
   },
 
   zoneId: 0,
@@ -32,9 +32,10 @@ Treedrag.prototype = {
         limitToParent:_this.options.limitToParent
       });
 
-      new DragDrop(this,{
-        limitToParent:_this.options.limitToParent
-      });
+
+    });
+    new DragDrop(this.$element,{
+      limitToParent:_this.options.limitToParent
     });
   },
 

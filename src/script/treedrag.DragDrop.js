@@ -41,35 +41,11 @@ DragDrop.prototype = {
     });
   },
 
-  onDroppableEnter: function (droppable) {
-    this.currentDroppable = $(this);
+  onDroppableEnter: function (e,droppable) {
+    this.currentDroppable = $(droppable);
     if (this.isDragging) {
       this.saveSameLevelElementsPositions();
     }
-  },
-
-  getCurrentDroppableWhileDragging: function (e) {
-    var droppable, keepElm, top = e.pageY, left = e.pageX;
-    if (this.isDragging) {
-      var list = this.droppablesList;
-      if (list.length) {
-        for (var i = 0; i < list.length; i++) {
-          droppable = $(list[i]);
-          if (top >= droppable.position().top) {
-            keepElm = droppable;
-          }
-        }
-      }
-      if (keepElm && this.currentDroppable != keepElm) {
-        this.currentDroppable = keepElm;
-        this.saveSameLevelElementsPositions();
-      }
-    }
-
-  },
-
-  saveAllDroppablePositions: function () {
-    this.droppablesList = this.$element.find('.treedrag-droppable[data-droppable-accept=' + this.currentDraggedElement.data('draggable-type') + ']');
   },
 
   startDrag: function (e, elm) {
@@ -112,19 +88,22 @@ DragDrop.prototype = {
           .removeClass('treedrag-isdragging');
       this.draggedElementPhantom.replaceWith(this.currentDraggedElement);
       this.draggableElementsToCheck = [];
+      this.droppablesList.removeClass('treedrag-droppable-isaccepting');
     }
   },
 
   move: function (e) {
     if (this.isDragging) {
-      this.getCurrentDroppableWhileDragging(e);
       var mOffset = this.startMouseOffset;
       var props = {
         'left': e.pageX - mOffset.left,
         'top': e.pageY - mOffset.top
       };
+      this.currentDraggedElementProps = props;
       this.currentDraggedElement.css(props);
-      this.checkDraggedPosition(props);
+      var currentProps = this.currentDraggedElement.position();
+      this.getCurrentDroppableWhileDragging(currentProps);
+      this.checkDraggedPosition(currentProps);
     }
   },
 
@@ -143,6 +122,9 @@ DragDrop.prototype = {
         });
   },
 
+  /* =========================
+   * Draggable methods
+   ========================= */
   checkDraggedPosition: function (props) {
     var checkedElm, left, top, keepElm;
     top = props.top;
@@ -154,12 +136,47 @@ DragDrop.prototype = {
           keepElm = checkedElm;
         }
       }
-      if (keepElm) {
-        this.draggedElementPhantom.insertAfter(keepElm.elm);
+    }
+
+    if (keepElm) {
+      this.draggedElementPhantom.insertAfter(keepElm.elm);
+    } else {
+      if(this.draggableElementsToCheck.length>0) {
+        this.draggedElementPhantom.insertBefore(this.draggableElementsToCheck[0].elm);
       } else {
-        this.currentDroppable.append(this.draggableElementsToCheck[0].elm);
+        this.currentDroppable.append(this.draggedElementPhantom);
       }
     }
+  },
+
+
+  /* =========================
+   * Droppable methods
+   ========================= */
+  getCurrentDroppableWhileDragging: function (props) {
+    var droppable, keepElm, droppablePosition, top = props.top, left = props.left;
+    if (this.isDragging) {
+      var list = this.droppablesList;
+      if (list.length) {
+        for (var i = 0; i < list.length; i++) {
+          droppable = $(list[i]);
+          droppablePosition = droppable.position();
+          if (top >= droppablePosition.top && left >= droppablePosition.left) {
+            keepElm = droppable;
+          }
+        }
+      }
+      if (keepElm && this.currentDroppable != keepElm) {
+        this.currentDroppable = keepElm;
+        this.saveSameLevelElementsPositions();
+      }
+    }
+
+  },
+
+  saveAllDroppablePositions: function () {
+    this.droppablesList = this.$element.find('.treedrag-droppable[data-droppable-accept=' + this.currentDraggedElement.data('draggable-type') + ']');
+    this.droppablesList.addClass('treedrag-droppable-isaccepting')
   }
 };
 
