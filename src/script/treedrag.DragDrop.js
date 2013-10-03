@@ -149,7 +149,9 @@ DragDrop.prototype = {
       if (this.draggableElementsToCheck.length > 0) {
         this.draggedElementPhantom.insertBefore(this.draggableElementsToCheck[0].elm);
       } else {
-        this.currentDroppable.append(this.draggedElementPhantom);
+        if(!this.options.limitToParent || fthis.options.limitToParent && this.currentDroppable.data('droppable-accept') == this.draggedElementPhantom.data('draggable-type')) {
+          this.currentDroppable.append(this.draggedElementPhantom);
+        }
       }
     }
   },
