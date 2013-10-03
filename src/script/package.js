@@ -1,0 +1,3 @@
+treedrag = {
+  TreeDrag: TreeDrag
+};

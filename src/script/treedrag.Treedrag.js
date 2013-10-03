@@ -55,4 +55,3 @@ $.fn.treedrag = function () {
   });
   return this;
 };
-

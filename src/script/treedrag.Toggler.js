@@ -31,10 +31,22 @@ Toggler.prototype = {
     var el = e.currentTarget,
         $ul = $(el).parent().find('ul:first');
 
-      $ul.stop().dequeue().animate({
-        'height': $ul.height() == 0 ? $ul[0].scrollHeight : 0
-      }, 500);
+    $ul.height() == 0 ? Toggler.openDroppable($ul) : Toggler.closeDroppable($ul);
   }
+};
+
+Toggler.openDroppable = function(droppable) {
+  droppable.stop().dequeue().animate({
+    'height': droppable[0].scrollHeight
+  },500, function() {
+    droppable.height('');
+  });
+};
+
+Toggler.closeDroppable = function(droppable) {
+  droppable.stop().dequeue().animate({
+    height:0
+  });
 };
 
 
