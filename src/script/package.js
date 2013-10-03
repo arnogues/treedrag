@@ -1,3 +1,0 @@
-treedrag = {
-  TreeDrag: TreeDrag
-};

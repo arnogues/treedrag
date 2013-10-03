@@ -2,7 +2,6 @@
  * Apply data-draggable and data-droppable atrributes on a ul>li list ul are droppables, li are draggables
  * @constructor
  */
-(function () {
   var zoneId = 0;
 
   PropertiesSetter = function () {
@@ -63,4 +62,3 @@
       $(ul).find('h2').addClass('treedrag-toggle');
     }
   };
-})();

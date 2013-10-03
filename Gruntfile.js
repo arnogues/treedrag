@@ -48,52 +48,6 @@ module.exports = function (grunt) {
      {expand: true, cwd: 'path/', src: ['**'], dest: 'dest/'}, // makes all src relative to cwd
      {expand: true, flatten: true, src: ['path*//**'], dest: 'dest/', filter: 'isFile'} // flattens results to a single level*/
 
-    copy: {
-      /* main: {
-       files: [
-       {
-       expand: true,
-       cwd: 'app/',
-       dest: 'build/',
-       src: [
-       'assets*//**',
-       'mocks*//**'
-       ]
-       }
-       ]
-       },*/
-      /* 'handlebars-templates': {
-       options: {
-       processContent: function (content, srcpath) {
-       console.log(content, srcpath);
-       return "toto" + content + "toto"
-       }
-       },
-       files: [
-       {
-       expand: true,
-       cwd: 'src/main/',
-       dest: 'dev/',
-       src: [
-       'template*//**'
-       ]
-       }
-       ]
-       },*/
-
-      /* images: {
-       files: [
-       {
-       expand: true,
-       cwd: 'src/main/',
-       dest: 'src/main/webapp/images',
-       src: [
-       'images*//**'
-       ]
-       }
-       ]
-       }*/
-    },
 
     connect: {
       server: {
@@ -105,40 +59,28 @@ module.exports = function (grunt) {
       }
     },
 
-    open: {
+  /*  open: {
       dev: {
         url: 'http://localhost:<%= connect.server.options.port %>',
         app: 'Google Chrome'
       }
-    },
+    },*/
 
-    compass: {  // Task
-      /*dist: {  // Target
-       options: { // Target options
-       sassDir: "src/main/css",
-       cssDir: 'dist/css',
-       imagesDir: 'src/main/img',
-       generatedImagesDir: 'dist/img',
-       environment: 'production'
-       }
-       },*/
-      clean: {  // Target
-        options: { // Target options
-          sassDir: "src/main/resources/sass",
-          cssDir: 'src/main/resources/css',
-          environment: 'development',
-          clean: true
-        }
-      },
-      dev: { // Another target
+      concat: {
         options: {
-          sassDir: "src/main/sass",
-          cssDir: 'src/main/webapp/css',
-          imagesDir: 'src/main/images',
-          generatedImagesDir: 'src/main/webapp/img',
-          environment: 'development'
+          banner:';(function($) {',
+          footer:'})(jQuery);',
+          separator: '\n'
+        },
+        dist: {
+          src:[
+            'src/script/treedrag.DragDrop.js',
+            'src/script/treedrag.PropertiesSetter.js',
+            'src/script/treedrag.Toggler.js',
+            'src/script/treedrag.Treedrag.js'
+          ],
+          dest: 'dist/jquery.treedrag.js'
         }
-      }
     },
 
     // Run: `grunt watch` from command line for this section to take effect
@@ -154,5 +96,8 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['connect', 'watch']);
 
   //grunt.registerTask('clean', ['compass:clean']);
-  grunt.registerTask('build', ['compass:dev']);
+  //grunt.registerTask('build', ['compass:dev']);
+
+  //grunt.registerTask('clean', ['compass:clean']);
+  grunt.registerTask('dist', ['concat']);
 };
