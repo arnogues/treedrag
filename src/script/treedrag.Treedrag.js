@@ -9,7 +9,7 @@ var Treedrag = function () {
 Treedrag.prototype = {
   constructor: Treedrag.prototype.constructor,
   options: {
-
+    limitToParent:false
   },
 
   zoneId: 0,
@@ -24,13 +24,17 @@ Treedrag.prototype = {
   },
 
   install: function () {
+    var _this = this;
     this.zones.each(function () {
       $(this).attr('data-zone-id', this.zoneId++);
       new PropertiesSetter(this, {
-        zoneId: this.zoneId
+        zoneId: this.zoneId,
+        limitToParent:_this.options.limitToParent
       });
 
-      new DragDrop(this);
+      new DragDrop(this,{
+        limitToParent:_this.options.limitToParent
+      });
     });
   },
 

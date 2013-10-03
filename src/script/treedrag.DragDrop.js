@@ -12,7 +12,7 @@ var DragDrop = function () {
 DragDrop.prototype = {
   constructor: DragDrop.prototype.constructor,
   options: {
-
+    limitToParent: true
   },
 
   init: function (element, options) {
@@ -34,27 +34,67 @@ DragDrop.prototype = {
         })
         .on('mousemove', function (e) {
           _this.move(e);
-        })
+        });
+
+    this.$element.on('mouseenter', '.treedrag-droppable', function (e) {
+      _this.onDroppableEnter(e, this);
+    });
   },
 
+  onDroppableEnter: function (droppable) {
+    this.currentDroppable = $(this);
+    if (this.isDragging) {
+      this.saveSameLevelElementsPositions();
+    }
+  },
+
+  getCurrentDroppableWhileDragging: function (e) {
+    var droppable, keepElm, top = e.pageY, left = e.pageX;
+    if (this.isDragging) {
+      var list = this.droppablesList;
+      if (list.length) {
+        for (var i = 0; i < list.length; i++) {
+          droppable = $(list[i]);
+          if (top >= droppable.position().top) {
+            keepElm = droppable;
+          }
+        }
+      }
+      if (keepElm && this.currentDroppable != keepElm) {
+        this.currentDroppable = keepElm;
+        this.saveSameLevelElementsPositions();
+      }
+    }
+
+  },
+
+  saveAllDroppablePositions: function () {
+    this.droppablesList = this.$element.find('.treedrag-droppable[data-droppable-accept=' + this.currentDraggedElement.data('draggable-type') + ']');
+  },
 
   startDrag: function (e, elm) {
     e.preventDefault();
     e.stopPropagation();
     var $elm = $(elm);
+    //init dragging and save main infos
     this.isDragging = true;
     this.currentDraggedElement = $elm;
     this.startMouseOffset = {
       left: e.pageX - $elm.position().left,
       top: e.pageY - $elm.position().top
     };
-    this.saveSameLevelElementsPositons();
+    //create phantom
     var phantom = this.draggedElementPhantom = $elm.clone();
     phantom.addClass('treedrag-phantom');
     $elm.after(phantom);
+
+    //set props and move the $elm to the parent this.$element to avoid problems of z-index with ie7
     $elm.addClass('treedrag-isdragging');
     $elm.css('width', phantom.width());
     this.$element.append($elm);
+
+    this.saveAllDroppablePositions();
+    this.saveSameLevelElementsPositions();
     this.move(e);
   },
 
@@ -62,10 +102,12 @@ DragDrop.prototype = {
     e.preventDefault();
     if (this.isDragging) {
       this.isDragging = false;
+      //reset styles and put the element at it's previous place
       this.currentDraggedElement
           .css({
             'left': '',
-            'top': ''
+            'top': '',
+            'width': ''
           })
           .removeClass('treedrag-isdragging');
       this.draggedElementPhantom.replaceWith(this.currentDraggedElement);
@@ -75,54 +117,49 @@ DragDrop.prototype = {
 
   move: function (e) {
     if (this.isDragging) {
+      this.getCurrentDroppableWhileDragging(e);
       var mOffset = this.startMouseOffset;
-
       var props = {
         'left': e.pageX - mOffset.left,
         'top': e.pageY - mOffset.top
       };
       this.currentDraggedElement.css(props);
-
       this.checkDraggedPosition(props);
     }
   },
 
-  saveSameLevelElementsPositons: function () {
-    var _this = this;
-    var listElm = this.$element.find('.treedrag-draggable[data-draggable-type=' + this.currentDraggedElement.data('draggable-type') + ']');
-    this.draggableElementsToCheck = listElm.filter(function () {
-      return this != _this.currentDraggedElement[0];
-    })
+  saveSameLevelElementsPositions: function () {
+    var _this = this, listElm;
+    var selector = '.treedrag-draggable[data-draggable-type=' + this.currentDraggedElement.data('draggable-type') + ']';
+    listElm = this.currentDroppable.find(selector).not('.treedrag-phantom').not(this.currentDraggedElement);
+    this.draggableElementsToCheck = listElm
         .map(function () {
           var $elm = $(this);
           return {
-            left: $elm.position().left,
-            top: $elm.position().top,
-            height: $elm[0].offsetHeight,
-            width: $elm[0].offsetWidth,
-            elm:$elm
+            //top: $elm.position().top,
+            childrenNum: $elm.parent().children.length,
+            elm: $elm
           }
         });
-    console.log(this.draggableElementsToCheck);
   },
 
   checkDraggedPosition: function (props) {
     var checkedElm, left, top, keepElm;
-    for (var i = 0; i < this.draggableElementsToCheck.length; i++) {
-      checkedElm = this.draggableElementsToCheck[i];
-      left = props.left;
-      top = props.top;
-      if (
-          top >= checkedElm.top && top <= checkedElm.top + checkedElm.height
-          ) {
-
-        keepElm = checkedElm;
-        break;
+    top = props.top;
+    if (this.draggableElementsToCheck.length) {
+      for (var i = 0; i < this.draggableElementsToCheck.length; i++) {
+        checkedElm = this.draggableElementsToCheck[i];
+        var checkedTop = checkedElm.elm.position().top;
+        if (top >= checkedTop) {
+          keepElm = checkedElm;
+        }
       }
-
+      if (keepElm) {
+        this.draggedElementPhantom.insertAfter(keepElm.elm);
+      } else {
+        this.currentDroppable.append(this.draggableElementsToCheck[0].elm);
+      }
     }
-    if(keepElm)
-      this.draggedElementPhantom.insertAfter(keepElm.elm);
   }
 };
 

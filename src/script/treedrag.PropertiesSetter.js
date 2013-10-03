@@ -55,7 +55,7 @@
         var firstUl = $(this).find('ul:first');
         var id = $(this).attr('data-id');
         if (firstUl.length) {
-          _this.applyProperties(firstUl, level++, id);
+          _this.applyProperties(firstUl, level+1, id);
         }
       });
     }
