@@ -109,8 +109,13 @@ DragDrop.prototype = {
 
   saveSameLevelElementsPositions: function () {
     var _this = this, listElm;
-    var selector = '.treedrag-draggable[data-draggable-type=' + this.currentDraggedElement.data('draggable-type') + ']';
-    listElm = this.currentDroppable.find(selector).not('.treedrag-phantom').not(this.currentDraggedElement);
+    //var selector = '.treedrag-draggable[data-draggable-type=' + this.currentDraggedElement.data('draggable-type') + ']';
+    listElm = this.currentDroppable
+        .find('.treedrag-draggable')
+        .not('.treedrag-phantom').not(this.currentDraggedElement)
+        .filter(function( ){
+          return $(this).data('draggable-type') == _this.currentDraggedElement.data('draggable-type');
+        });
     this.draggableElementsToCheck = listElm
         .map(function () {
           var $elm = $(this);
