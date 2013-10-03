@@ -30,7 +30,6 @@ Toggler.prototype = {
   onTogglerClick:function(e) {
     var el = e.currentTarget;
 
-    debugger;
     $(el).parent().find('ul:first').toggle(200);
   }
 };
