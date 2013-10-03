@@ -178,13 +178,14 @@ DragDrop.prototype = {
 
   getCurrentDroppableWhileDragging: function (props) {
     var droppable, keepElm, droppablePosition, top = props.top, left = props.left;
+    var offset = this.currentDraggedElement[0].offsetWidth / 2;
     if (this.isDragging) {
       var list = this.droppablesList;
       if (list.length) {
         for (var i = 0; i < list.length; i++) {
           droppable = $(list[i]);
           droppablePosition = droppable.position();
-          if (top >= droppablePosition.top && left >= droppablePosition.left) {
+          if (top >= droppablePosition.top && left >= droppablePosition.left- offset) {
             keepElm = droppable;
           }
         }
