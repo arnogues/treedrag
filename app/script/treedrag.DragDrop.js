@@ -24,8 +24,57 @@ DragDrop.prototype = {
 
   addEvents: function () {
     var _this = this;
-    this.$element.on('mousedown', '.treedrag-draggable', function (e) {
-      e.preventDefault();
+    var elms = this.$element.find('.treedrag-draggable');
+
+    elms.drag($.proxy(this.onDrag, this));
+    elms.drag('init', $.proxy(this.onDragStart, this));
+    elms.drag('end', $.proxy(this.onDragStart, this));
+
+    /*this.$element.on('drag', '.treedrag-draggable', $.proxy(this.onDrag, this));
+    this.$element.on('dragstart', '.treedrag-draggable', $.proxy(this.onDragStart, this));
+    this.$element.on('dragend', '.treedrag-draggable', $.proxy(this.onDragEnd, this));*/
+  },
+
+  onDragStart:function(ev, dd) {
+    console.log('ondragstart');
+    var $elm = $(dd.drag);
+    this.createPhantom($elm);
+    this.setElemPos($elm, dd);
+    $elm.addClass('treedrag-isdragging');
+    $elm.css('width', this.phantom.width());
+    this.$element.append($elm);
+  },
+
+  onDrag: function (ev, dd) {
+    this.setElemPos($(dd.drag), dd);
+  },
+
+  onDragEnd:function(ev, dd) {
+
+  },
+
+  onDrop: function (ev, dd) {
+
+  },
+
+  createPhantom:function(element) {
+    var $elm = $(element);
+    var phantom = this.phantom = $elm.clone();
+    phantom.addClass('treedrag-phantom');
+    $elm.after(phantom);
+  },
+
+  setElemPos : function(elm,dd) {
+    elm.css({
+      top: dd.offsetY,
+      left: dd.offsetX
+    })
+  }
+
+  /*addEvents: function () {
+   var _this = this;
+   this.$element.on('mousedown', '.treedrag-draggable', function (e) {
+   e.preventDefault();
       e.stopPropagation();
       _this.isWaitingDrag = true;
       _this.currentDraggedElement = $(this);
@@ -44,18 +93,18 @@ DragDrop.prototype = {
       _this.onDroppableEnter(e, this);
     });
   },
-
-  onDroppableEnter: function (e, droppable) {
-    this.currentDroppable = $(droppable);
-    if (this.isDragging) {
-      this.saveSameLevelElementsPositions();
+   */
+  /* onDroppableEnter: function (e, droppable) {
+   this.currentDroppable = $(droppable);
+   if (this.isDragging) {
+   this.saveSameLevelElementsPositions();
     }
-  },
+   }*/
 
-  startDrag: function (e, elm) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.isWaitingDrag) {
+  /* startDrag: function (e, elm) {
+   e.preventDefault();
+   e.stopPropagation();
+   if (this.isWaitingDrag) {
       this.isWaitingDrag = false;
       var $elm = this.currentDraggedElement;
       //init dragging and save main infos
@@ -139,12 +188,12 @@ DragDrop.prototype = {
         });
   },
 
-  /* =========================
+   *//* =========================
    * Draggable methods
-   ========================= */
-  checkDraggedPosition: function (props) {
-    var checkedElm, left, top, keepElm;
-    top = props.top;
+   ========================= *//*
+   checkDraggedPosition: function (props) {
+   var checkedElm, left, top, keepElm;
+   top = props.top;
     if (this.draggableElementsToCheck.length) {
       for (var i = 0; i < this.draggableElementsToCheck.length; i++) {
         checkedElm = this.draggableElementsToCheck[i];
@@ -169,14 +218,14 @@ DragDrop.prototype = {
   },
 
 
-  /* =========================
+   *//* =========================
    * Droppable methods
-   ========================= */
-  checkDroppableParents: function () {
+   ========================= *//*
+   checkDroppableParents: function () {
 
-  },
+   },
 
-  getCurrentDroppableWhileDragging: function (props) {
+   getCurrentDroppableWhileDragging: function (props) {
     var droppable, keepElm, droppablePosition, top = props.top, left = props.left;
     var offset = this.currentDraggedElement[0].offsetWidth / 2;
     if (this.isDragging) {
@@ -204,12 +253,12 @@ DragDrop.prototype = {
       return $(this).data('droppable-accept') == _this.currentDraggedElement.data('draggable-type')
     });
     //this.droppablesList = this.$element.find('.treedrag-droppable');
-    /*var level = _this.currentDraggedElement.data('level');
-    this.droppablesList = this.$element.find('.treedrag-droppable').filter(function () {
-      return $(this).data('level') <= level
-    });*/
-    //console.log(this.droppablesList);
-    this.droppablesList.addClass('treedrag-droppable-isaccepting')
-  }
+   *//*var level = _this.currentDraggedElement.data('level');
+   this.droppablesList = this.$element.find('.treedrag-droppable').filter(function () {
+   return $(this).data('level') <= level
+   });*//*
+   //console.log(this.droppablesList);
+   this.droppablesList.addClass('treedrag-droppable-isaccepting')
+   }*/
 };
 
