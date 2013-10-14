@@ -57,27 +57,42 @@ module.exports = function (grunt) {
     copy: {
       release: {
         files: [
-          {expand: true, cwd: "src/", src: ['*.html'], dest: 'dist/', filter: 'isFile'}
+          {
+            expand: true, cwd: "app/", dest: './dist/',
+            src: ['*.html', 'css/**']
+          }
         ]
       }
     },
 
     'useminPrepare': {
       html: 'app/index.html',
-      basedir :'./dist'
+      options: {
+        dest: 'dist'
+      }
 
     },
 
     'usemin': {
-      html: ['dist/*.html']
+      html: ['dist/*.html'],
+      options: {
+        dirs: ["dist"]
+      }
     },
 
     concat: {
-      options: {
-        banner: ';(function($) {',
-        footer: '})(jQuery);',
-        separator: '\n'
+      treedrag: {
+        options: {
+          banner: ';(function($) {',
+          footer: '})(jQuery);',
+          separator: '\n'
+        },
+
+        files: {
+          'dist/script/jquery.treedrag.js': ['dist/script/jquery.treedrag.js']
+        }
       }
+
     },
 
     // Run: `grunt watch` from command line for this section to take effect
@@ -101,5 +116,5 @@ module.exports = function (grunt) {
   //grunt.registerTask('build', ['compass:dev']);
 
   //grunt.registerTask('clean', ['compass:clean']);
-  grunt.registerTask('dist', ['clean:dist', 'useminPrepare', 'copy', 'concat', 'usemin']);
+  grunt.registerTask('dist', ['clean:dist', 'copy', 'useminPrepare', 'concat', 'usemin', 'concat:treedrag']);
 };
