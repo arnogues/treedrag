@@ -31,8 +31,6 @@ Treedrag.prototype = {
         zoneId: this.zoneId,
         limitToParent:_this.options.limitToParent
       });
-
-
     });
     new DragDrop(this.$element,{
       limitToParent:_this.options.limitToParent

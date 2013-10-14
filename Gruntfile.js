@@ -34,12 +34,6 @@ module.exports = function (grunt) {
     // Store your Package file so you can reference its specific data whenever necessary
     pkg: grunt.file.readJSON('package.json'),
 
-    // Used to connect to a locally running web server (so Jasmine can test against a DOM)
-    /*{src: ['path*//*'], dest: 'dest/', filter: 'isFile'}, // includes files in path
-     {src: ['path*//**'], dest: 'dest/'}, // includes files in path and its subdirs
-     {expand: true, cwd: 'path/', src: ['**'], dest: 'dest/'}, // makes all src relative to cwd
-     {expand: true, flatten: true, src: ['path*//**'], dest: 'dest/', filter: 'isFile'} // flattens results to a single level*/
-
     connect: {
       server: {
         options: {
@@ -112,9 +106,5 @@ module.exports = function (grunt) {
   //grunt.registerTask('default', ['clean', 'connect', 'build', /* 'open:dev', */'watch']);
   grunt.registerTask('default', ['connect', 'watch']);
 
-  //grunt.registerTask('clean', ['compass:clean']);
-  //grunt.registerTask('build', ['compass:dev']);
-
-  //grunt.registerTask('clean', ['compass:clean']);
   grunt.registerTask('dist', ['clean:dist', 'copy', 'useminPrepare', 'concat', 'usemin', 'concat:treedrag']);
 };
