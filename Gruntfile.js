@@ -34,10 +34,6 @@ module.exports = function (grunt) {
     // Store your Package file so you can reference its specific data whenever necessary
     pkg: grunt.file.readJSON('package.json'),
 
-    oocss: {
-      src: './app/'
-    },
-
     // Used to connect to a locally running web server (so Jasmine can test against a DOM)
     /*{src: ['path*//*'], dest: 'dest/', filter: 'isFile'}, // includes files in path
      {src: ['path*//**'], dest: 'dest/'}, // includes files in path and its subdirs
@@ -49,47 +45,44 @@ module.exports = function (grunt) {
         options: {
           hostname: '*',
           port: 8000,
-          base: './src/'
+          base: './app/'
         }
       }
     },
 
+    clean: {
+      dist: ["dist/"]
+    },
 
     copy: {
       release: {
-        files: {
-          'release': ['src/*']
-        }
+        files: [
+          {expand: true, cwd: "src/", src: ['*.html'], dest: 'dist/', filter: 'isFile'}
+        ]
       }
     },
 
     'useminPrepare': {
-      html: 'src/index.html'
+      html: 'app/index.html',
+      basedir :'./dist'
+
     },
 
     'usemin': {
-      html: 'release/index.html'
+      html: ['dist/*.html']
     },
+
     concat: {
       options: {
         banner: ';(function($) {',
         footer: '})(jQuery);',
         separator: '\n'
-      }/*,
-      dist: {
-        src: [
-          'src/script/treedrag.DragDrop.js',
-          'src/script/treedrag.PropertiesSetter.js',
-          'src/script/treedrag.Toggler.js',
-          'src/script/treedrag.Treedrag.js'
-        ],
-        dest: 'dist/jquery.treedrag.js'
-      }*/
+      }
     },
 
     // Run: `grunt watch` from command line for this section to take effect
     watch: {
-      files: ['./src/**/*'],
+      files: ['./app/**/*'],
       tasks: ''
     }
     /*  open: {
@@ -108,5 +101,5 @@ module.exports = function (grunt) {
   //grunt.registerTask('build', ['compass:dev']);
 
   //grunt.registerTask('clean', ['compass:clean']);
-  grunt.registerTask('release', ['useminPrepare','copy','concat','usemin']);
+  grunt.registerTask('dist', ['clean:dist', 'useminPrepare', 'copy', 'concat', 'usemin']);
 };
