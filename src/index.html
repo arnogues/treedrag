@@ -4,11 +4,23 @@
   <title>Treedrag</title>
   <link rel="stylesheet" href="style/treedrag.css"/>
 
+  <!-- build:js js//jquery-1.10.2.min.js -->
   <script src="vendor/jquery-1.10.2.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js vendor/jquery.event.drapdrop-2.2.min.js -->
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drag-2.2.js"></script>
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drag.live-2.2.js"></script>
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drop-2.2.js"></script>
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drop.live-2.2.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js js/jquery.treedrag.js -->
   <script src="script/treedrag.DragDrop.js"></script>
   <script src="script/treedrag.Toggler.js"></script>
   <script src="script/treedrag.PropertiesSetter.js"></script>
   <script src="script/treedrag.Treedrag.js"></script>
+  <!-- endbuild -->
 
   <script>
     $(function() {
@@ -89,6 +101,22 @@
 
   <div class="treedrag-zone">
     <h1>Zone 2</h1>
+    <ul>
+      <li data-id="cat1" class="dragLevel1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc1.1" class="dragLevel2">
+            <h3>Accessory 1</h3>
+            <ul>
+              <li data-id="sub1.1.1" class="dragLevel3">sub cat for the fun</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+ <div class="treedrag-zone">
+    <h1>Zone 3</h1>
     <ul>
       <li data-id="cat1" class="dragLevel1">
         <h2 class="dragTitle">Category 1</h2>

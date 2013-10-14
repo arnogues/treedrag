@@ -1,3 +1,6 @@
+TODO : http://threedubmedia.com/
+Utiliser les JS de ce site : jquery.event.drag et jquery.event.drop sont exactement les outils à utiliser.
+
 treedrag
 ========
 Simple and powerful drag and drop base on two tree lists
@@ -16,4 +19,5 @@ A faire :
 - Générer la liste des types droppable et draggable
 - Générer le code qui permet de dragger un draggable
 - Générer le code qui permet à un droppable de tester un draggable et de le recevoir
+
 

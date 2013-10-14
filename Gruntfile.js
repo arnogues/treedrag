@@ -27,10 +27,6 @@ module.exports = function (grunt) {
    Simple Dependency Install:
    --------------------------
    npm install (from the same root directory as the `package.json` file)
-
-   Gem Dependencies:
-   -----------------
-   gem install image_optim
    */
 
   // Project configuration.
@@ -48,7 +44,6 @@ module.exports = function (grunt) {
      {expand: true, cwd: 'path/', src: ['**'], dest: 'dest/'}, // makes all src relative to cwd
      {expand: true, flatten: true, src: ['path*//**'], dest: 'dest/', filter: 'isFile'} // flattens results to a single level*/
 
-
     connect: {
       server: {
         options: {
@@ -59,28 +54,37 @@ module.exports = function (grunt) {
       }
     },
 
-  /*  open: {
-      dev: {
-        url: 'http://localhost:<%= connect.server.options.port %>',
-        app: 'Google Chrome'
-      }
-    },*/
 
-      concat: {
-        options: {
-          banner:';(function($) {',
-          footer:'})(jQuery);',
-          separator: '\n'
-        },
-        dist: {
-          src:[
-            'src/script/treedrag.DragDrop.js',
-            'src/script/treedrag.PropertiesSetter.js',
-            'src/script/treedrag.Toggler.js',
-            'src/script/treedrag.Treedrag.js'
-          ],
-          dest: 'dist/jquery.treedrag.js'
+    copy: {
+      release: {
+        files: {
+          'release': ['src/*']
         }
+      }
+    },
+
+    'useminPrepare': {
+      html: 'src/index.html'
+    },
+
+    'usemin': {
+      html: 'release/index.html'
+    },
+    concat: {
+      options: {
+        banner: ';(function($) {',
+        footer: '})(jQuery);',
+        separator: '\n'
+      }/*,
+      dist: {
+        src: [
+          'src/script/treedrag.DragDrop.js',
+          'src/script/treedrag.PropertiesSetter.js',
+          'src/script/treedrag.Toggler.js',
+          'src/script/treedrag.Treedrag.js'
+        ],
+        dest: 'dist/jquery.treedrag.js'
+      }*/
     },
 
     // Run: `grunt watch` from command line for this section to take effect
@@ -88,7 +92,12 @@ module.exports = function (grunt) {
       files: ['./src/**/*'],
       tasks: ''
     }
-
+    /*  open: {
+     dev: {
+     url: 'http://localhost:<%= connect.server.options.port %>',
+     app: 'Google Chrome'
+     }
+     },*/
   });
 
   // Default Task
@@ -99,5 +108,5 @@ module.exports = function (grunt) {
   //grunt.registerTask('build', ['compass:dev']);
 
   //grunt.registerTask('clean', ['compass:clean']);
-  grunt.registerTask('dist', ['concat']);
+  grunt.registerTask('release', ['useminPrepare','copy','concat','usemin']);
 };

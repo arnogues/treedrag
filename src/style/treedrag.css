@@ -23,8 +23,8 @@ body {
 }
 
 .treedrag-zone {
-    float: right;
-    width: 44%;
+    float: left;
+    width: 25%;
     background: #eee;
     padding:20px;
     padding-bottom: 10020px;
