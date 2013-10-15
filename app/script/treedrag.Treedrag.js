@@ -27,7 +27,7 @@ Treedrag.prototype = {
     var _this = this;
     this.zones.each(function () {
       $(this).attr('data-zone-id', this.zoneId++);
-      new PropertiesSetter(this, {
+      new DragInitializer(this, {
         zoneId: this.zoneId,
         limitToParent:_this.options.limitToParent
       });

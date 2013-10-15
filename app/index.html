@@ -19,13 +19,15 @@
   <!-- build:js script/jquery.treedrag.js -->
   <script src="script/treedrag.DragDrop.js"></script>
   <script src="script/treedrag.Toggler.js"></script>
-  <script src="script/treedrag.PropertiesSetter.js"></script>
+  <script src="script/treedrag.DragInitializer.js"></script>
   <script src="script/treedrag.Treedrag.js"></script>
   <!-- endbuild -->
 
   <script>
     $(function() {
-      $('.treedrag').treedrag();
+      $('.treedrag').treedrag({
+        limitToParent:false
+      });
     });
   </script>
 </head>
