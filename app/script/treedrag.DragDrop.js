@@ -19,6 +19,8 @@ DragDrop.prototype = {
     this.$element = $(element);
     this.options = $.extend(true, {}, this.options, options);
 
+    this.emptydroppables = this.$element.find('.empty-droppable');
+
     this.addEvents();
   },
 
@@ -49,7 +51,10 @@ DragDrop.prototype = {
   // DRAG methods
   // ==============
   onDragInit: function (ev, dd) {
-
+    var currentLevel = this.currentLevel = $(dd.target).data('level');
+    this.emptydroppables.filter(function() {
+      return $(this).data('level')==currentLevel;
+    }).show();
   },
 
   onDragStart:function(ev, dd) {
@@ -64,18 +69,10 @@ DragDrop.prototype = {
   onDrag: function (ev, dd) {
     this.setElemPos($(dd.drag), dd);
 
-    console.log(
-        $(dd.drag).data('id'),
-        $(dd.drop[0]).data('id'),
-        $(dd.proxy).data('id'),
-        $(dd.target).data('id')
-    )
-
-
     var drop = dd.drop[0],
         method = $.data( drop || {}, "drop+reorder" );
     if ( drop && ( drop != dd.current || method != dd.method ) ){
-      if(this.phantom)this.phantom[ method ]( drop );
+      if(this.phantom) this.phantom[ method ]( drop );
       dd.current = drop;
       dd.method = method;
       dd.update();
@@ -94,7 +91,7 @@ DragDrop.prototype = {
   // DROP methods
   // ==============
   onDropInit: function (ev, dd) {
-    return !( dd.target == dd.drag) ;
+    return  !( dd.target == dd.drag) ;
   },
   onDropStart: function (ev, dd) {
     console.log("dropstart");
