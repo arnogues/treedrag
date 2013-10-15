@@ -117,6 +117,7 @@ body {
     filter:alpha(opacity=40);
     opacity: 0.4;
 }
+
 .treedrag-droppable-isaccepting {
     min-height: 10px;
     background-color: #999 !important;
@@ -128,7 +129,16 @@ body {
 }
 
 .empty-droppable {
-    display: none;
-    height:30px;
-    background:#777;
+	display: block;
+	height: 0;
+	background: #DDD;
+	-webkit-transition: all linear 50ms;
+}
+
+.empty-droppable.active{
+	height: 30px;
+}
+
+.empty-droppable.dropHover{
+	background: red;
 }
