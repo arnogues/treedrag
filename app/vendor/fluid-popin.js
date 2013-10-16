@@ -2,7 +2,7 @@
 
 	var pluginName = "fluidPopin",
 		defaults = {
-			propertyName: "value"
+			notifListener: 'body'
 		};
 
 	function Plugin ( element, options ) {
@@ -33,6 +33,8 @@
 			this.modal.bind('click', $.proxy(this._modalClickEvent, this));
 
 			this.closer.bind('click', $.proxy(this._closerClickEvent, this));
+
+			$(this.options.notifListener).bind(pluginName+'_close', $.proxy(this.close, this));
 		},
 		_linkClickEvent: function(e){
 			e.preventDefault();

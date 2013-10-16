@@ -5,6 +5,7 @@ body {
 .treedrag {
     zoom: 1;
     overflow:hidden;
+	position: relative;
 }
 
 .treedrag:after {
@@ -141,4 +142,8 @@ body {
 
 .empty-droppable.dropHover{
 	background: red;
+}
+
+.treedrag .fp-fog{
+	position: absolute;
 }

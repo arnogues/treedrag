@@ -25,36 +25,7 @@
 	<!-- endbuild -->
 
 	<script src="vendor/fluid-popin.js"></script>
-
-	<script>
-		$(function () {
-			$('.treedrag').treedrag({
-				limitToParent: false,
-				onAfterDrop: function (target, drag) {
-					var hasSameElement = false, sameElements = [];
-
-					$(target).parent().find('> li').each(function (i, el) {
-						if ($(el).data('id') && $(el).data('id') == $(drag).data('id')) {
-							hasSameElement = true;
-							sameElements.push($(el));
-						}
-					});
-
-					if (hasSameElement) {
-						$(".fpopin").click();
-
-					}
-
-					//TODO Open popin with choice of sameElements;
-
-					console.log('hasSameElement: ', hasSameElement)
-					return !hasSameElement;
-				}
-			});
-
-			$(".fpopin").fluidPopin();
-		});
-	</script>
+	<script src="vendor/prompt.js"></script>
 
 	<style>
 		li[data-id="sub1.1.1"] {
@@ -143,14 +114,14 @@
 	<div class="treedrag-zone">
 		<h1>Zone 2</h1>
 		<ul>
-			<li data-id="cat1" class="dragLevel1">
+			<li data-id="cat11" class="dragLevel1">
 				<h2 class="dragTitle">Category 1</h2>
 				<ul>
-					<li data-id="acc1.1" class="dragLevel2">
+					<li data-id="acc11.1" class="dragLevel2">
 						<h3>Accessory 1</h3>
 						<ul>
 							<li data-id="sub1.1.1" class="dragLevel3">sub cat for the fun</li>
-							<li data-id="sub1.2.2" class="dragLevel3">sub cat for the fun 2</li>
+							<li data-id="sub11.2.2" class="dragLevel3">sub cat for the fun 2</li>
 						</ul>
 					</li>
 				</ul>
@@ -160,10 +131,10 @@
 	<div class="treedrag-zone">
 		<h1>Zone 3</h1>
 		<ul>
-			<li data-id="cat1" class="dragLevel1">
+			<li data-id="cat111" class="dragLevel1">
 				<h2 class="dragTitle">Category 1</h2>
 				<ul>
-					<li data-id="acc1.1" class="dragLevel2">
+					<li data-id="acc111.1" class="dragLevel2">
 						<h3>Accessory 1</h3>
 						<ul>
 							<li data-id="sub1.1.1" class="dragLevel3">sub cat for the fun</li>
@@ -185,8 +156,13 @@
 				<div class="popin-content">
 					<p>Ces éléments sont identiques lequel voulez vous garder?</p>
 
-					<form action="" class="js-prompt">
-						<label><input type="radio" name="promptchoice" value=""/></label>
+					<form class="js-prompt">
+                        <div class="js-promptList">
+                            <p><label><input type="radio" name="promptchoice" value="item321"/> sub cat for the fun</label></p>
+                            <p><label><input type="radio" name="promptchoice" value="item326"/> sub cat for the fun</label></p>
+                        </div>
+
+                        <p><button type="submit" disabled>Valider</button></p>
 					</form>
 				</div>
 			</div>
@@ -194,6 +170,55 @@
 	</div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('.js-prompt').prompt({
+            promptList: [
+                {value: "tata", text: "ta maman"},
+                {value: "toto", text: "ton papa"}
+            ]
+        });
+        $('.treedrag').treedrag({
+            limitToParent: false,
+            onAfterDrop: function (target, drag) {
+                var hasSameElement = false,
+                    sameElements = [{
+                        value: drag.id,
+                        text: drag.innerText,
+                        element: $(drag)
+                    }];
+
+                $(target).parent().find('> li').each(function (i, el) {
+                    if ($(el).data('id') && $(el).data('id') == $(drag).data('id')) {
+                        hasSameElement = true;
+                        sameElements.push({
+                            value: el.id,
+                            text: el.innerText,
+                            element: $(el)
+                        });
+                    }
+                });
+
+                if (hasSameElement) {
+                    $('.js-prompt').data('plugin_prompt').refresh(sameElements);
+                    $(".fpopin").data('plugin_fluidPopin').open();
+                }
+
+                //TODO Open popin with choice of sameElements;
+
+                return !hasSameElement;
+            },
+            onInit: function(){
+                console.log('onInit', this.options);
+               /* $(this.options.notifListener).bind('prompt_submit', function(){
+                    $('body').trigger('fluidPopin_close');
+                });*/
+            }
+        });
+
+        $(".fpopin").fluidPopin();
+    });
+</script>
 
 </body>
 </html>

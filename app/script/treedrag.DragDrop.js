@@ -13,7 +13,8 @@ DragDrop.prototype = {
 	constructor: DragDrop.prototype.constructor,
 	options: {
 		limitToParent: true,
-		onAfterDrop: function(){}
+		onAfterDrop: function(){},
+		onInit: function(){}
 	},
 
 	init: function (element, options) {
@@ -24,6 +25,9 @@ DragDrop.prototype = {
 		this.emptyDroppables = this.items.filter('.empty-droppable');
 
 		this.addEvents();
+		console.log('test', this.options.onInit)
+
+//		(this.options.onInit && typeof this.options.onInit == 'function') && ($.proxy(this.options.onInit, this));
 	},
 
 	addEvents: function () {
@@ -138,4 +142,3 @@ DragDrop.prototype = {
 		})
 	}
 };
-
