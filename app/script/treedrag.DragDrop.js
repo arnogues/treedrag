@@ -12,7 +12,8 @@ var DragDrop = function () {
 DragDrop.prototype = {
 	constructor: DragDrop.prototype.constructor,
 	options: {
-		limitToParent: true
+		limitToParent: true,
+		onAfterDrop: function(){}
 	},
 
 	init: function (element, options) {
@@ -20,7 +21,7 @@ DragDrop.prototype = {
 		this.options = $.extend(true, {}, this.options, options);
 
 		this.items = this.$element.find('li');
-		this.emptyDroppables = this.$element.find('li.empty-droppable');
+		this.emptyDroppables = this.items.filter('.empty-droppable');
 
 		this.addEvents();
 	},
@@ -36,7 +37,7 @@ DragDrop.prototype = {
 		this.items.drop('init', $.proxy(this.onDropInit, this));
 		this.items.drop('start', $.proxy(this.onDropStart, this));
 		this.items.drop($.proxy(this.onDrop, this));
-		this.items.drop('start', $.proxy(this.onDropEnd, this));
+		this.items.drop('end', $.proxy(this.onDropEnd, this));
 
 		/*$.drop({
 		 tolerance: function (event, proxy, target) {
@@ -119,11 +120,13 @@ DragDrop.prototype = {
 	},
 	onDrop: function (ev, dd) {
 //		console.log("drop");
+		return typeof this.options.onAfterDrop == 'function' ? this.options.onAfterDrop(dd.target, dd.drag) : true;
 	},
 
 	createPhantom: function (element) {
 		var $elm = $(element);
 		var phantom = this.phantom = $elm.clone();
+		phantom.data('id', phantom.data('id')+"phantom");
 		phantom.addClass('treedrag-phantom');
 		$elm.after(phantom);
 	},

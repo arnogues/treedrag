@@ -1,0 +1,42 @@
+.fp-fog{
+	position:fixed;
+	display: none;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0, 0.5);
+}
+.fp-fog.show{
+	display: block;
+}
+
+.fp-fog:after,
+.fp-fog .after{
+	content:'';
+	width: 0;
+	background: red;
+	height: 100%;
+	display: inline-block;
+	*display: inline;
+	zoom:1;
+
+	vertical-align: middle;
+}
+
+.fp-modalwrapper{
+	display: none;
+	vertical-align: middle;
+	width: 99%;
+}
+.fp-modalwrapper.show{
+	display: inline-block;
+	*display: inline;
+	zoom:1;
+}
+
+.fp-modalwrapper .fp-modal{
+	margin: 0 auto;
+	width: 600px;
+	background: white;
+}
