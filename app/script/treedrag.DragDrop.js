@@ -56,14 +56,15 @@ DragDrop.prototype = {
 	// DRAG methods
 	// ==============
 	onDragInit: function (ev, dd) {
-		var currentLevel = this.currentLevel = $(dd.drag).data('level');
-		var emptyTarget = this.emptyDroppables.filter(function () {
-			return $(this).data('level') == currentLevel;
-		});
-		emptyTarget.addClass('active');
+    var currentLevel = this.currentLevel = $(dd.drag).data('level');
+    this.emptyTarget = this.emptyDroppables.filter(function () {
+      return $(this).data('level') == currentLevel;
+    });
 	},
 
 	onDragStart: function (ev, dd) {
+    if(this.emptyTarget)
+      this.emptyTarget.addClass('active');
 //		console.log('onDragStart')
 		var $elm = $(dd.drag);
 		this.createPhantom($elm);
@@ -115,8 +116,8 @@ DragDrop.prototype = {
 	onDropStart: function (ev, dd) {
 //		console.log('onDropStart');
 		var currentTarget = $(dd.target);
-		currentTarget.parent().find('> .empty-droppable').insertBefore(currentTarget);
-		currentTarget.parent().find('> .empty-droppable').addClass('dropHover');
+		currentTarget.parent().find('> .empty-droppable')
+        .insertBefore(currentTarget).addClass('dropHover');
 	},
 	onDropEnd: function (ev, dd) {
 //		console.log("dropEnd");
