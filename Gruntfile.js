@@ -77,11 +77,11 @@ module.exports = function (grunt) {
 		concat: {
 			treedrag: {
 				options: {
-					banner: ';(function($) {',
-					footer: '})(jQuery);',
-					separator: '\n'
+					process:function(src, filepath){
+            var template = grunt.file.read('build.template.txt');
+            return grunt.template.process(template, { data:{file:src }});
+          }
 				},
-
 				files: {
 					'dist/script/jquery.treedrag.js': ['dist/script/jquery.treedrag.js']
 				}
