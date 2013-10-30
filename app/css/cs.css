@@ -1,0 +1,24 @@
+.treedrag {
+    background: #EEE;
+}
+
+.treedrag ul {
+    padding: 0;
+    margin: 0;
+}
+
+.treedrag li {
+    margin-bottom: 5px;
+    list-style: none;
+}
+
+.treedrag li span {
+    display: block;
+    padding: 5px 10px;
+    border: 1px solid #999;
+    background: #FFF;
+}
+
+.treedrag li ul {
+    margin: 5px 0 5px 50px;
+}
