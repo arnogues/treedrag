@@ -2,6 +2,8 @@ var path = require('path');
 module.exports = function (grunt) {
 // load all grunt tasks
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+  //var ssInclude = require("connect-include");
 	/*
 	 Grunt installation:
 	 -------------------
@@ -39,8 +41,10 @@ module.exports = function (grunt) {
 				options: {
 					hostname: '*',
 					port: 8000,
-					base: './app/'
+					base: 'app',
+          directory:'app'
 				}
+
 			}
 		},
 
@@ -96,6 +100,15 @@ module.exports = function (grunt) {
 			}
 		},
 
+    directives: {
+      options: {
+        // Task-specific options go here.
+      },
+      your_target: {
+        // Target-specific file lists and/or options go here.
+      }
+    },
+
 		// Run: `grunt watch` from command line for this section to take effect
 		watch: {
 			files: ['./app/**/*'],
@@ -108,6 +121,7 @@ module.exports = function (grunt) {
 		 }
 		 },*/
 	});
+
 
 	// Default Task
 	//grunt.registerTask('default', ['clean', 'connect', 'build', /* 'open:dev', */'watch']);
