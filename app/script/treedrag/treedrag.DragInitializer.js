@@ -42,7 +42,8 @@ DragInitializer.prototype = {
 					'data-draggable': true,
 					'data-level': level,
 					'data-draggable-type': newLevel,
-					'id': 'item-' + _this.zoneId + level + i
+					'id': 'item-' + _this.zoneId + level + i,
+           'data-zone-id' : _this.zoneId
 				})
 				.addClass('treedrag-draggable');
 

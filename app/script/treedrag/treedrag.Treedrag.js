@@ -33,7 +33,7 @@ Treedrag.prototype = {
 		var _this = this;
 
 		this.zones.each(function () {
-			$(this).attr('data-zone-id', this.zoneId++);
+			$(this).attr('data-zone-id', _this.zoneId++);
 			var options = $.extend({}, _this.options, {
 				zoneId: this.zoneId
 			});
@@ -42,7 +42,9 @@ Treedrag.prototype = {
 
     switch (this.options.mode) {
       case 'droppopin' :
-        this.droppopin = new DropPopin();
+        this.droppopin = new Droppopin({
+          zones:this.zones
+        });
         this.dragdrop = new DragDrop(this.$element, $.extend(this.options, {
           overrideMethod : this.droppopin.override
         }));

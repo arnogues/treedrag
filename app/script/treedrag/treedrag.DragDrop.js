@@ -13,7 +13,8 @@ DragDrop.prototype = {
 	constructor: DragDrop.prototype.constructor,
 	options: {
 		limitToParent: true,
-		onAfterDrop: function(){},
+    overrideFunction: function(){},
+    onAfterDrop: function(){return true},
 		onInit: function(){}
 	},
 
@@ -25,12 +26,19 @@ DragDrop.prototype = {
 		this.emptyDroppables = this.items.filter('.empty-droppable');
 
 		this.addEvents();
-		console.log('test', this.options.onInit)
+    if (this.options.overrideFunction) {
+      this.options.overrideFunction(this);
+    }
 
-//		(this.options.onInit && typeof this.options.onInit == 'function') && ($.proxy(this.options.onInit, this));
-	},
+    // (this.options.onInit && typeof this.options.onInit == 'function') && ($.proxy(this.options.onInit, this));
+    this.afterInit();
+  },
 
-	addEvents: function () {
+  afterInit: function () {
+
+  },
+
+  addEvents: function () {
 		var _this = this;
 
 		this.items.drag('init', $.proxy(this.onDragInit, this));
@@ -103,8 +111,8 @@ DragDrop.prototype = {
 
 		if(dd.drop[0]){
 			$(dd.target).insertBefore($(dd.drop[0]));
-		}
-	},
+    }
+  },
 
 	// =============
 	// DROP methods
@@ -116,8 +124,7 @@ DragDrop.prototype = {
 	onDropStart: function (ev, dd) {
 //		console.log('onDropStart');
     var currentTarget = $(dd.target);
-    currentTarget.parent().find('> .empty-droppable')
-        .insertBefore(currentTarget).addClass('dropHover');
+    currentTarget.parent().find('> .empty-droppable').insertBefore(currentTarget).addClass('dropHover');
   },
 	onDropEnd: function (ev, dd) {
 //		console.log("dropEnd");
