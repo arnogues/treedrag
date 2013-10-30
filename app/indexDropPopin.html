@@ -1,0 +1,210 @@
+<!-- #include file="scripts.html" -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Treedrag</title>
+
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="css/treedrag.css"/>
+  <link rel="stylesheet" href="css/fluid-popin.css"/>
+
+  <!-- build:js vendor/jquery-1.10.2.min.js -->
+  <script src="vendor/jquery-1.10.2.js"></script>
+  <!-- endbuild -->
+  <!-- build:js vendor/jquery.event.drapdrop-2.2.min.js -->
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drag-2.2.js"></script>
+  <script src="vendor/jquery.event.drapdrop/jquery.event.drop-2.2.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js script/jquery.treedrag.js -->
+  <script src="script/treedrag/treedrag.package.js"></script>
+  <script src="script/treedrag/treedrag.DragDrop.js"></script>
+  <script src="script/treedrag/treedrag.Toggler.js"></script>
+  <script src="script/treedrag/treedrag.DragInitializer.js"></script>
+  <script src="script/treedrag/treedrag.Treedrag.js"></script>
+  <script src="script/treedrag/treedrag.Droppopin.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js script/jquery.treedrag.plugins.js -->
+  <script src="script/plugins/fluid-popin.js"></script>
+  <script src="script/plugins/prompt.js"></script>
+  <!-- endbuild -->
+
+  <style>
+    li[data-id="sub1.1.1"] {
+      background: red !important;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="treedrag">
+  <div class="treedrag-zone">
+    <h1>Zone 1</h1>
+    <ul>
+      <li data-id="cat1" class="dragLevel1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc1.2" class="dragLevel2">
+            <h3>Accessory 2</h3>
+            <ul>
+              <li data-id="sub1.2.1" class="dragLevel3">sub cat for the fun 1</li>
+              <li data-id="sub1.2.2" class="dragLevel3">sub cat for the fun 2</li>
+              <li data-id="sub1.2.3" class="dragLevel3">sub cat for the fun 3</li>
+              <li data-id="sub1.2.4" class="dragLevel3">sub cat for the fun 4</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat2" class="dragLevel1">
+        <h2 class="dragTitle">Category 2</h2>
+        <ul>
+          <li data-id="acc2.1" class="dragLevel2">
+            <h3>Accessory 2.1</h3>
+          </li>
+          <li data-id="acc2.2" class="dragLevel2">
+            <h3>Accessory 2.2</h3>
+          </li>
+          <li data-id="acc2.3" class="dragLevel2">
+            <h3>Accessory 2.3</h3>
+          </li>
+          <li data-id="acc2.4" class="dragLevel2">
+            <h3>Accessory 2.4</h3>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat3" class="dragLevel1">
+        <h2 class="dragTitle">Category 3</h2>
+        <ul>
+          <li data-id="acc3.1" class="dragLevel2">
+            <h3>Accessory 3.1</h3>
+          </li>
+        </ul>
+      </li>
+      <li data-id="cat4" class="dragLevel1">
+        <h2 class="dragTitle">Category 4</h2>
+        <ul>
+          <li data-id="acc4.1" class="dragLevel2">
+            <h3>Accessory 1</h3>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="treedrag-zone">
+    <h1>Zone 2</h1>
+    <ul>
+      <li data-id="cat11" class="dragLevel1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc11.1" class="dragLevel2">
+            <h3>Accessory 1</h3>
+            <ul>
+              <li data-id="sub1.1.1" class="dragLevel3">sub cat for the fun</li>
+              <li data-id="sub11.2.2" class="dragLevel3">sub cat for the fun 2</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="treedrag-zone">
+    <h1>Zone 3</h1>
+    <ul>
+      <li data-id="cat111" class="dragLevel1">
+        <h2 class="dragTitle">Category 1</h2>
+        <ul>
+          <li data-id="acc111.1" class="dragLevel2">
+            <h3>Accessory 1</h3>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+
+  <a href="#popin" class="fpopin hidden">Popin</a>
+
+  <div class="fp-fog" id="fp-fog">
+    <div id="popin" class="fp-modalwrapper">
+      <div class="fp-modal">
+        <span class="fp-close">X</span>
+
+        <div class="popin-content">
+          <p>Ces éléments sont identiques lequel voulez vous garder?</p>
+
+          <form class="js-prompt">
+            <div class="js-promptList">
+              <p><label><input type="radio" name="promptchoice" value="item321"/> sub cat for the fun</label></p>
+
+              <p><label><input type="radio" name="promptchoice" value="item326"/> sub cat for the fun</label></p>
+            </div>
+
+            <p>
+              <button type="submit" disabled>Valider</button>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('.treedrag').treedrag({
+      limitToParent: true,
+      mode:"droppopin"
+
+      /*onAfterDrop: function (target, drag) {
+        var hasSameElement = false,
+            sameElements = [
+              {
+                value: drag.id,
+                text: drag.innerText,
+                element: $(drag)
+              }
+            ];
+
+        $(target).parent().find('> li').each(function (i, el) {
+          if ($(el).data('id') && $(el).data('id') == $(drag).data('id')) {
+            hasSameElement = true;
+            sameElements.push({
+              value: el.id,
+              text: el.innerText,
+              element: $(el)
+            });
+          }
+        });
+
+        if (hasSameElement) {
+          $('.js-prompt').data('plugin_prompt').refresh(sameElements);
+          $(".fpopin").data('plugin_fluidPopin').open();
+        }
+
+        //TODO Open popin with choice of sameElements;
+
+        return !hasSameElement;
+      },
+      onInit: function () {
+        console.log('onInit', this.options);
+        *//* $(this.options.notifListener).bind('prompt_submit', function(){
+         $('body').trigger('fluidPopin_close');
+         });*//*
+      }*/
+    });
+
+    $(".fpopin").fluidPopin();
+  });
+</script>
+
+</body>
+</html>
