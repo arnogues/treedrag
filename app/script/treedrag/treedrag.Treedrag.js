@@ -9,8 +9,14 @@ var Treedrag = function () {
 Treedrag.prototype = {
 	constructor: Treedrag.prototype.constructor,
 	options: {
-		limitToParent: true
-	},
+    limitToParent: true,
+    /**
+     * mode of the treedrag.
+     * List of modes
+     * droppopin : this mode show a popin when you drop an element into a "zone"
+     */
+    mode: ''
+  },
 
 	zoneId: 0,
 
@@ -31,13 +37,21 @@ Treedrag.prototype = {
 			var options = $.extend({}, _this.options, {
 				zoneId: this.zoneId
 			});
-			new DragInitializer(this, options);
-		});
+      _this.dragInitialiazer = new DragInitializer(this, options);
+    });
 
-		new DragDrop(this.$element, this.options);
-
-		new Toggler(this.$element);
-	},
+    switch (this.options.mode) {
+      case 'droppopin' :
+        this.droppopin = new DropPopin();
+        this.dragdrop = new DragDrop(this.$element, $.extend(this.options, {
+          overrideMethod : this.droppopin.override
+        }));
+        break;
+      default :
+        this.dragdrop = new DragDrop(this.$element, this.options);
+    }
+    this.toggler = new Toggler(this.$element);
+  },
 
 	addEvents: function () {
 

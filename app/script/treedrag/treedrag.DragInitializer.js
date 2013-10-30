@@ -31,11 +31,11 @@ DragInitializer.prototype = {
 		var _this = this;
 		var $ul = $(ul);
 		if (!$ul.data('id')) {
-			$ul.attr('data-id', 'droppable_' + (id || '0'));
+			$ul.attr('data-id', 'droppable_' + (id || $ul.attr('id') || '0'));
 		}
 		var newLevel = this.options.limitToParent ? $ul.data('id') + '_' + level : level;
 
-		//  .addClass('treedrag-droppable');
+		//.addClass('treedrag-droppable');
 		$ul.children().each(function (i, el) {
 			$(this)
 				.attr({

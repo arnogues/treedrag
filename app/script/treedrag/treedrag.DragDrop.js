@@ -115,10 +115,10 @@ DragDrop.prototype = {
 	},
 	onDropStart: function (ev, dd) {
 //		console.log('onDropStart');
-		var currentTarget = $(dd.target);
-		currentTarget.parent().find('> .empty-droppable')
+    var currentTarget = $(dd.target);
+    currentTarget.parent().find('> .empty-droppable')
         .insertBefore(currentTarget).addClass('dropHover');
-	},
+  },
 	onDropEnd: function (ev, dd) {
 //		console.log("dropEnd");
 		$(dd.target).parent().find('> .empty-droppable').removeClass('dropHover');
