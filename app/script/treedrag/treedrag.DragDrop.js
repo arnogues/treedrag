@@ -13,8 +13,11 @@ DragDrop.prototype = {
 	constructor: DragDrop.prototype.constructor,
 	options: {
 		limitToParent: true,
+		fusion: false,
+		restrictDropLevel: true,
+		emptyDropableClassName: 'empty-droppable',
 		onAfterDrop: function(){},
-		onInit: function(){}
+		onFusion: function(){}
 	},
 
 	init: function (element, options) {
@@ -22,12 +25,9 @@ DragDrop.prototype = {
 		this.options = $.extend(true, {}, this.options, options);
 
 		this.items = this.$element.find('li');
-		this.emptyDroppables = this.items.filter('.empty-droppable');
+		this.emptyDroppables = this.items.filter('.'+this.options.emptyDropableClassName);
 
 		this.addEvents();
-		console.log('test', this.options.onInit)
-
-//		(this.options.onInit && typeof this.options.onInit == 'function') && ($.proxy(this.options.onInit, this));
 	},
 
 	addEvents: function () {
@@ -43,6 +43,10 @@ DragDrop.prototype = {
 		this.items.drop($.proxy(this.onDrop, this));
 		this.items.drop('end', $.proxy(this.onDropEnd, this));
 
+		$.drop({
+			multi : true,
+			mode:true
+		});
 		/*$.drop({
 		 tolerance: function (event, proxy, target) {
 		 var test = event.pageY > ( target.top + target.height / 2 );
@@ -56,16 +60,19 @@ DragDrop.prototype = {
 	// DRAG methods
 	// ==============
 	onDragInit: function (ev, dd) {
-    var currentLevel = this.currentLevel = $(dd.drag).data('level');
-    this.emptyTarget = this.emptyDroppables.filter(function () {
-      return $(this).data('level') == currentLevel;
-    });
+		if(this.options.restrictDropLevel){
+			var currentLevel = this.currentLevel = $(dd.drag).data('level');
+			this.emptyTarget = this.emptyDroppables.filter(function () {
+				return $(this).data('level') == currentLevel;
+			});
+		}else{
+			this.emptyTarget = this.emptyDroppables;
+		}
+
+		this.emptyTarget.addClass('active');
 	},
 
 	onDragStart: function (ev, dd) {
-    if(this.emptyTarget)
-      this.emptyTarget.addClass('active');
-//		console.log('onDragStart')
 		var $elm = $(dd.drag);
 		this.createPhantom($elm);
 		this.setElemPos($elm, dd);
@@ -78,8 +85,8 @@ DragDrop.prototype = {
 //		console.log('onDrag')
 		this.setElemPos($(dd.drag), dd);
 
-		var drop = dd.drop[0],
-			method = $.data(drop || {}, "drop+reorder");
+		/*var drop = dd.drop[0],
+			method = $.data(drop || {}, "drop+reorder");*/
 		/*if ( drop && ( drop != dd.current || method != dd.method ) ){
 		 if(this.phantom) this.phantom[ method ]( drop );
 		 dd.current = drop;
@@ -92,36 +99,61 @@ DragDrop.prototype = {
 	},
 
 	onDragEnd: function (ev, dd) {
-//		console.log('onDragEnd', dd.target, dd.drop[0]);
-		$(dd.target).css('width', '');
+//		console.log('onDragEnd', dd.drop);
+		//Get Element
+		var droped = $(dd.drop[dd.drop.length-1]),
+			draged = $(dd.target);
+
+		//Restor style
+		draged.css('width', '');
+
+		//Restor element
+		this.phantom.replaceWith(draged);
+
+		switch(true){
+			//Fusion condition
+			case (droped.data('level') == draged.data('level') && !droped.hasClass(this.options.emptyDropableClassName) && this.options.fusion):
+				console.log('Fuuuuuuusion!');
+				(typeof this.options.onFusion == 'function') && this.options.onFusion(draged, droped);
+				break;
+
+			case droped.hasClass(this.options.emptyDropableClassName):
+				console.log('En dessus!', droped, draged);
+				draged.insertBefore(droped);
+				break;
+		}
+
+		//Empty gestion
 		this.emptyDroppables.removeClass('active');
 		this.emptyDroppables.each(function(){
 			$(this).appendTo($(this).parent());
 		});
-		this.phantom.replaceWith(dd.target);
-		$(dd.target).removeClass('treedrag-isdragging');
 
-		if(dd.drop[0]){
-			$(dd.target).insertBefore($(dd.drop[0]));
-		}
+		//Class gestion
+		$(dd.target).removeClass('treedrag-isdragging');
 	},
 
 	// =============
 	// DROP methods
 	// ==============
 	onDropInit: function (ev, dd) {
-		/*console.log("onDropInit", dd.target, dd.drag)*/
-		return  !( dd.target == dd.drag || $(dd.target).data('level') != $(dd.drag).data('level'));
+//		return  !( dd.target == dd.drag || $(dd.target).data('level') != $(dd.drag).data('level')); //Lock only on same level
+		return  dd.target != dd.drag;
 	},
+
 	onDropStart: function (ev, dd) {
-//		console.log('onDropStart');
+//		console.log('onDropStart, target: ',dd.target, ', drag: ', dd.drag)
+		console.log(dd.target)
 		var currentTarget = $(dd.target);
-		currentTarget.parent().find('> .empty-droppable')
-        .insertBefore(currentTarget).addClass('dropHover');
+		currentTarget.addClass('dropHover');
+		/*currentTarget.parent().find('> .empty-droppable')
+        .insertBefore(currentTarget).addClass('dropHover');*/
 	},
+
 	onDropEnd: function (ev, dd) {
-//		console.log("dropEnd");
-		$(dd.target).parent().find('> .empty-droppable').removeClass('dropHover');
+//		console.log('onDropEnd, target: ',dd.target, ', drag: ', dd.drag)
+		$(dd.target).removeClass('dropHover');
+//		$(dd.target).parent().find('> .empty-droppable').removeClass('dropHover');
 	},
 	onDrop: function (ev, dd) {
 //		console.log("drop");
@@ -130,7 +162,7 @@ DragDrop.prototype = {
 
 	createPhantom: function (element) {
 		var $elm = $(element);
-		var phantom = this.phantom = $elm.clone();
+		var phantom = this.phantom = $elm.clone(true);
 		phantom.data('id', phantom.data('id')+"phantom");
 		phantom.addClass('treedrag-phantom');
 		$elm.after(phantom);

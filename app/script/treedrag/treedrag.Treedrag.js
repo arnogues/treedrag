@@ -9,7 +9,9 @@ var Treedrag = function () {
 Treedrag.prototype = {
 	constructor: Treedrag.prototype.constructor,
 	options: {
-		limitToParent: true
+		limitToParent: true,
+		notifListener: 'body',
+		onInit: function(){}
 	},
 
 	zoneId: 0,
@@ -21,11 +23,13 @@ Treedrag.prototype = {
 
 		this.install();
 		this.addEvents();
+
+		this.options.onInit.apply(this);
+
 	},
 
 	install: function () {
 		var _this = this;
-
 		this.zones.each(function () {
 			$(this).attr('data-zone-id', this.zoneId++);
 			var options = $.extend({}, _this.options, {
@@ -40,6 +44,10 @@ Treedrag.prototype = {
 	},
 
 	addEvents: function () {
+
+	},
+
+	merge: function(){
 
 	}
 };
