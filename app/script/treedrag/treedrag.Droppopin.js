@@ -22,11 +22,57 @@ Droppopin.prototype = {
     this.dragdropInstance = dragDropInstance;
     var _this = this;
 
+   // dragDropInstance.old_onDragInit = dragDropInstance.onDragInit;
+    dragDropInstance.onDragInit = function (ev, dd) {
+      if(this.options.restrictDropLevel){
+        var currentLevel = this.currentLevel = $(dd.drag).data('level');
+        this.emptyTarget = this.emptyDroppables.filter(function () {
+          return $(this).data('level') == currentLevel;
+        });
+      }else{
+        this.emptyTarget = this.emptyDroppables;
+      }
+      $(dd.drag).data('original-parent', $(dd.drag).parents('.treedrag-draggable').eq(0));
+    };
+
+    dragDropInstance.old_onDragStart = dragDropInstance.onDragStart;
+    dragDropInstance.onDragStart  = function (ev, dd) {
+      var $elm = $(dd.drag);
+      dragDropInstance.createPhantom($elm);
+      dragDropInstance.setElemPos($elm, dd);
+      $elm.css('width', $elm.width());
+      $elm.addClass('treedrag-isdragging');
+      dragDropInstance.$element.append($elm);
+    };
+
     dragDropInstance.old_onDropInit = dragDropInstance.onDropInit;
     dragDropInstance.onDropInit = function (ev, dd) {
-      var dragType = $(dd.drag).data("draggable-type");
-      return dragType == $(dd.target).data('id') || dragType == $(dd.target).data("droppable-accept");
+      //var dragType = $(dd.drag).data("draggable-type");
+
+      var parents = $(dd.drag).parents();
+      var isparent = jQuery.inArray(dd.target,parents) > -1;
+      var rule = dd.drag != dd.target
+          && $(dd.drag).data('zone-id') == $(dd.target).data('zone-id')
+          && $(dd.drag).data('level') == $(dd.target).data('level')
+          && $(dd.drag).data('draggable-type') == $(dd.target).data('draggable-type')
+          && !isparent; // && (dragType == $(dd.target).data('id') || dragType == $(dd.target).data("droppable-accept"));
+
+
+     /* if($(dd.target).data('draggable-type')== $(dd.drag).data('draggable-type'))
+        console.log(rule,$(dd.drag).data('draggable-type'), $(dd.target).data('draggable-type'),dd.target);*/
+      return  rule;
     };
+
+    dragDropInstance.old_onDropStart = dragDropInstance.onDropStart;
+    dragDropInstance.onDropStart = function (ev, dd) {
+      _this.dragdropInstance.phantom.insertBefore(dd.target);
+      console.log(dd.drop, $(dd.target).data('id'));
+    };
+/*
+    dragDropInstance.onDrop = function (ev, dd) {
+      console.log(dd.drop, $(dd.drop).data('id'));
+    };*/
+
 
 
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
@@ -35,12 +81,6 @@ Droppopin.prototype = {
       var originalCat;
       var drag = $(dd.drag);
       var zone = $(dd.drop);
-      /*  var draged = $(dd.target);
-
-       //Restor style
-       draged.css('width', '');
-       //Restor element
-       this.phantom.replaceWith(draged);*/
 
       if (zone.length && zone.data("zone-id") != drag.data("zone-id")) {
         switch (drag.data("level")) {
@@ -128,7 +168,6 @@ Droppopin.prototype = {
     this.zones.unbind('dropinit dropstart');
 
     this.zones.drop('init', function (ev, dd) {
-      //if ($(dd.drag).data('level') == 1) return false;
       _this.dragInProgress = true;
       return  $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
     });
