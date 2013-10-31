@@ -14,7 +14,7 @@ Droppopin.prototype = {
   init: function (options) {
     this.options = $.extend(true, {}, this.options, options);
     this.zones = this.options.zones;
-    this.zones.append('<div class="treedrag-zone-fog"></div>');
+    //this.zones.append('<div class="treedrag-zone-fog"></div>');
     this.addEvents();
     this.createPopin();
     this.overrideDragDrop = $.proxy(this.overrideDragDrop, this);
@@ -28,6 +28,13 @@ Droppopin.prototype = {
   overrideDragDrop: function (dragDropInstance) {
     this.dragdropInstance = dragDropInstance;
     var _this = this;
+
+    dragDropInstance.old_onDropInit =dragDropInstance.onDropInit;
+    dragDropInstance.onDropInit=function(ev,dd) {
+      var dragType = $(dd.drag).data("draggable-type");
+      return dragType==$(dd.target).data('id') || dragType == $(dd.target).data("droppable-accept");
+    };
+
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
     dragDropInstance.onDragEnd = function (ev, dd) {
       if (_this.newCatHasBeenCreated) {
@@ -41,7 +48,6 @@ Droppopin.prototype = {
             _this.currentZone.append(_this.currentDropCat);
           }
           /*if (_this.dragInCatEnabled) {
-
             $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
             $(dd.drag).css({
               left: 'auto',
@@ -104,6 +110,7 @@ Droppopin.prototype = {
     $(zone).append(this.popin);
     this.popin.show();
     this.zones.removeClass('zone-isdraggable');
+    zone.addClass('zone-isdraggable');
     this.popin.empty().append(this.currentDropCat);
   },
 
