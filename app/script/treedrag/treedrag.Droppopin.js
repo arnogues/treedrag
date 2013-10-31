@@ -30,9 +30,6 @@ Droppopin.prototype = {
     var _this = this;
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
     dragDropInstance.onDragEnd = function (ev, dd) {
-      dragDropInstance.old_onDragEnd(ev, dd);
-
-
       if (_this.newCatHasBeenCreated) {
         //debugger;
       } else {
@@ -43,13 +40,14 @@ Droppopin.prototype = {
           } else {
             _this.currentZone.append(_this.currentDropCat);
           }
-          if (_this.dragInCatEnabled) {
+          /*if (_this.dragInCatEnabled) {
+
             $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
             $(dd.drag).css({
               left: 'auto',
               top: 'auto'
             });
-          }
+          }*/
         }
       }
 
@@ -60,13 +58,15 @@ Droppopin.prototype = {
       _this.newCatHasBeenCreated = false;
       _this.dragInCatEnabled = true;
 
+      dragDropInstance.old_onDragEnd(ev, dd);
+
     }
   },
 
   resetZonesIds: function () {
     this.zones.each(function () {
       var zone = $(this);
-      zone.find('[data-zone-id').attr('data-zone-id', zone.data('id'));
+      zone.find('[data-zone-id]').attr('data-zone-id', zone.attr('data-id'));
     });
   },
 
@@ -105,7 +105,6 @@ Droppopin.prototype = {
     this.popin.show();
     this.zones.removeClass('zone-isdraggable');
     this.popin.empty().append(this.currentDropCat);
-    console.log('show');
   },
 
   close: function () {
@@ -118,6 +117,10 @@ Droppopin.prototype = {
     var _this = this;
     if (!this.popin) {
       this.popin = $('<div class="treedrag_droppopin"></div>').hide();
+      this.popin.appendTo(this.zones[0]);
+      this.popin.drop('init',function() {
+        return true;
+      });
       /* this.popin.mouseenter(function () {
        _this.dragInCatEnabled = true;
        });*/
