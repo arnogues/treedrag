@@ -84,8 +84,9 @@ Droppopin.prototype = {
               drag.detach();
               zone.data('savedcat-' + drag.data('id'), drag);
             } else {
-              zone.append(drag);
+              zone.find('ul:first').append(drag);
             }
+
             break;
 
           case 2 :
@@ -104,7 +105,7 @@ Droppopin.prototype = {
                 foundCat = originalCat.clone(true);
                 foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
               }
-              zone.append(foundCat);
+              zone.find('ul:first').append(foundCat);
               foundCat.data('zone-id', zone.data('zone-id'));
             }
             drag.insertBefore(foundCat.find('.empty-droppable'));
@@ -145,7 +146,7 @@ Droppopin.prototype = {
           .each(function () {
             $(this).appendTo($(this).parent());
           });
-
+      drag.data('hasbeendrag',true);
       //Class gestion
       $(dd.target).removeClass('treedrag-isdragging');
       _this.currentZone = null;

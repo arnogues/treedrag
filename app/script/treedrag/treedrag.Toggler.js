@@ -24,28 +24,37 @@ Toggler.prototype = {
   },
 
   addEvents: function () {
+    var _this = this;
     this.$element.on('click', 'ul .treedrag-toggle', $.proxy(this.onTogglerClick, this));
   },
 
   onTogglerClick: function (e) {
     var el = e.currentTarget,
         $ul = $(el).parent().find('ul:first');
+    setTimeout(function() {
+      var theLi = $ul.parents('li').eq(0);
+      var dragged = theLi.data('hasbeendrag');
+      if(!dragged) {
+        $ul.height() == 0 ? Toggler.openDroppable($ul) : Toggler.closeDroppable($ul);
+      }
+      theLi.data('hasbeendrag',false);
+    },10);
 
-    $ul.height() == 0 ? Toggler.openDroppable($ul) : Toggler.closeDroppable($ul);
   }
+
 };
 
-Toggler.openDroppable = function(droppable) {
+Toggler.openDroppable = function (droppable) {
   droppable.stop().dequeue().animate({
     'height': droppable[0].scrollHeight
-  },500, function() {
+  }, 500, function () {
     droppable.height('');
   });
 };
 
-Toggler.closeDroppable = function(droppable) {
+Toggler.closeDroppable = function (droppable) {
   droppable.stop().dequeue().animate({
-    height:0
+    height: 0
   });
 };
 
