@@ -161,4 +161,20 @@ h3{
     min-height: 200px;
     width:300px;
     padding:10px;
+    z-index:90;
+}
+
+.treedrag-zone-fog {
+    display: none;
+    position: absolute;
+    z-index:80;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#000;
+}
+
+.zone-isdraggable .treedrag-zone-fog {
+    display: block;
 }

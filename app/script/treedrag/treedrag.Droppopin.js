@@ -14,6 +14,8 @@ Droppopin.prototype = {
   init: function (options) {
     this.options = $.extend(true, {}, this.options, options);
     this.zones = this.options.zones;
+
+    this.zones.append('<div class="treedrag-zone-fog"></div>');
     this.addEvents();
     this.overrideDragDrop = $.proxy(this.overrideDragDrop, this);
   },
@@ -25,7 +27,16 @@ Droppopin.prototype = {
     treedrag.onDragEnd = function (ev, dd) {
       treedrag.old_onDragEnd(ev, dd);
       _this.close();
-      _this.currentZone.append(_this.currentDropCat);
+
+      var nextSibling = _this.currentDropCat.data('next-sibling');
+      if(nextSibling && nextSibling.length) {
+        _this.currentDropCat.insertBefore(nextSibling);
+      } else {
+        _this.currentZone.append(_this.currentDropCat);
+      }
+
+      _this.currentZone=null;
+      _this.currentDropCat=null;
     }
   },
 
@@ -40,18 +51,19 @@ Droppopin.prototype = {
     this.zones.drop("start", function (ev, dd) {
       var drag = $(dd.drag);
       var zone = $(dd.target);
-      //console.log(drag.data('draggable-type'), '[data-id=' + drag.data('draggable-type') + ']', );
-      //debugger;
+      if(_this.currentZone && _this.currentZone.data('zone-id') == zone.data('zone-id')) return;
+
       var foundCat = zone.find('[data-id=' + drag.data('draggable-type') + ']');
       if (!foundCat.length) {
         foundCat = $(dd.drag).data('original-parent').clone(true);
-        foundCat.find('ul:first').empty();
+        foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
       } else {
         foundCat = foundCat.parents('.treedrag-draggable').eq(0);
+        foundCat.data('next-sibling', foundCat.next());
       }
       _this.currentDropCat = foundCat;
       _this.currentZone = zone;
-
+      zone.addClass('zone-isdraggable');
       _this.open(zone);
     });
   },
@@ -61,6 +73,7 @@ Droppopin.prototype = {
     this.createPopin();
     $(zone).append(this.popin);
     this.popin.show();
+    this.zones.removeClass('zone-isdraggable');
     this.popin.empty().append(this.currentDropCat);
     console.log('show');
   },
