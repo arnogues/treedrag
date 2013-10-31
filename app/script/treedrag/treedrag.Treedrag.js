@@ -9,14 +9,11 @@ var Treedrag = function () {
 Treedrag.prototype = {
 	constructor: Treedrag.prototype.constructor,
 	options: {
-    limitToParent: true,
-    /**
-     * mode of the treedrag.
-     * List of modes
-     * droppopin : this mode show a popin when you drop an element into a "zone"
-     */
-    mode: ''
-  },
+		limitToParent: true,
+		notifListener: 'body',
+		onInit: function(){},
+    mode:''
+	},
 
 	zoneId: 0,
 
@@ -27,11 +24,13 @@ Treedrag.prototype = {
 
 		this.install();
 		this.addEvents();
+
+		this.options.onInit.apply(this);
+
 	},
 
 	install: function () {
 		var _this = this;
-
 		this.zones.each(function () {
 			$(this).attr('data-zone-id', _this.zoneId++);
 			var options = $.extend({}, _this.options, {
@@ -56,6 +55,10 @@ Treedrag.prototype = {
   },
 
 	addEvents: function () {
+
+	},
+
+	merge: function(){
 
 	}
 };
