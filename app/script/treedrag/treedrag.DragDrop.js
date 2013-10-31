@@ -17,22 +17,18 @@ DragDrop.prototype = {
 		restrictDropLevel: true,
 		emptyDropableClassName: 'empty-droppable',
 		onAfterDrop: function(){},
-		onFusion: function(){}
-    //overrideFunction: function(){}
+		onFusion: function(){},
+    overrideFunction: function(){}
   },
 
 	init: function (element, options) {
 		this.$element = $(element);
 		this.options = $.extend(true, {}, this.options, options);
+    this.options.overrideFunction(this);
+    this.getItems();
 
-    if (this.options.overrideFunction) {
-      this.options.overrideFunction(this);
-    }
 
-			this.items = this.$element.find('li');
 		this.emptyDroppables = this.items.filter('.'+this.options.emptyDropableClassName);
-
-
     this.addEvents();
     // (this.options.onInit && typeof this.options.onInit == 'function') && ($.proxy(this.options.onInit, this));
     this.afterInit();
@@ -40,6 +36,10 @@ DragDrop.prototype = {
 
   afterInit: function () {
 
+  },
+
+  getItems:function() {
+    this.items = this.$element.find('li');
   },
 
   addEvents: function () {
@@ -61,19 +61,20 @@ DragDrop.prototype = {
 	},
 
   removeDropEvents:function() {
-    this.items.off('draginit dragstart drag dragend dropinit dropstart drop dropend');
+    this.items.unbind('draginit dragstart drag dragend dropinit dropstart drop dropend');
   },
 
-  addDropEvents:function() {
-    this.items.drag('init', $.proxy(this.onDragInit, this));
-    this.items.drag('start', $.proxy(this.onDragStart, this));
-    this.items.drag($.proxy(this.onDrag, this));
-    this.items.drag('end', $.proxy(this.onDragEnd, this));
+  addDropEvents:function(items) {
+    items = items || this.items;
+    items.drag('init', $.proxy(this.onDragInit, this));
+    items.drag('start', $.proxy(this.onDragStart, this));
+    items.drag($.proxy(this.onDrag, this));
+    items.drag('end', $.proxy(this.onDragEnd, this));
 
-    this.items.drop('init', $.proxy(this.onDropInit, this));
-    this.items.drop('start', $.proxy(this.onDropStart, this));
-    this.items.drop($.proxy(this.onDrop, this));
-    this.items.drop('end', $.proxy(this.onDropEnd, this));
+    items.drop('init', $.proxy(this.onDropInit, this));
+    items.drop('start', $.proxy(this.onDropStart, this));
+    items.drop($.proxy(this.onDrop, this));
+    items.drop('end', $.proxy(this.onDropEnd, this));
   },
 
 	// =============
@@ -188,7 +189,13 @@ DragDrop.prototype = {
 		$elm.after(phantom);
 	},
 
-	setElemPos: function (elm, dd) {
+  dragdropResetEvents: function () {
+    this.getItems();
+    this.removeDropEvents();
+    this.addDropEvents();
+  },
+
+  setElemPos: function (elm, dd) {
 		elm.css({
 			top: dd.offsetY,
 			left: dd.offsetX
