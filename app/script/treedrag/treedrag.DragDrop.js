@@ -3,6 +3,8 @@
  *
  * This class plays with the elements setted previously by the PropertiesSetter class
  * It uses draggable and droppable properties
+ *
+ * draginit > dropinit > dragstart > drag > dropstart > drop > dropend > dragend
  */
 
 var DragDrop = function () {
@@ -30,18 +32,24 @@ DragDrop.prototype = {
 		this.addEvents();
 	},
 
-	addEvents: function () {
+	refreshEmptyDroppable: function(){
+		this.emptyDroppables = this.$element.find('li.'+this.options.emptyDropableClassName);
+	},
+
+	addEvents: function (items) {
 		var _this = this;
 
-		this.items.drag('init', $.proxy(this.onDragInit, this));
-		this.items.drag('start', $.proxy(this.onDragStart, this));
-		this.items.drag($.proxy(this.onDrag, this));
-		this.items.drag('end', $.proxy(this.onDragEnd, this));
+		if(!items) items = this.items;
 
-		this.items.drop('init', $.proxy(this.onDropInit, this));
-		this.items.drop('start', $.proxy(this.onDropStart, this));
-		this.items.drop($.proxy(this.onDrop, this));
-		this.items.drop('end', $.proxy(this.onDropEnd, this));
+		items.drag('init', $.proxy(this.onDragInit, this));
+		items.drag('start', $.proxy(this.onDragStart, this));
+		items.drag($.proxy(this.onDrag, this));
+		items.drag('end', $.proxy(this.onDragEnd, this));
+
+		items.drop('init', $.proxy(this.onDropInit, this));
+		items.drop('start', $.proxy(this.onDropStart, this));
+		items.drop($.proxy(this.onDrop, this));
+		items.drop('end', $.proxy(this.onDropEnd, this));
 
 		$.drop({
 			multi : true,
@@ -121,9 +129,11 @@ DragDrop.prototype = {
 				console.log('En dessus!', droped, draged);
 				draged.insertBefore(droped);
 				break;
+
+			//No default, so do nothing
 		}
 
-		//Empty gestion
+		//Empty gestion Hide and replace at the end
 		this.emptyDroppables.removeClass('active');
 		this.emptyDroppables.each(function(){
 			$(this).appendTo($(this).parent());
@@ -146,8 +156,6 @@ DragDrop.prototype = {
 		console.log(dd.target)
 		var currentTarget = $(dd.target);
 		currentTarget.addClass('dropHover');
-		/*currentTarget.parent().find('> .empty-droppable')
-        .insertBefore(currentTarget).addClass('dropHover');*/
 	},
 
 	onDropEnd: function (ev, dd) {
