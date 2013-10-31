@@ -28,15 +28,30 @@ Droppopin.prototype = {
       treedrag.old_onDragEnd(ev, dd);
       _this.close();
 
-      var nextSibling = _this.currentDropCat.data('next-sibling');
-      if(nextSibling && nextSibling.length) {
-        _this.currentDropCat.insertBefore(nextSibling);
-      } else {
-        _this.currentZone.append(_this.currentDropCat);
+
+      if (_this.dragInCatEnabled) {
+
       }
 
-      _this.currentZone=null;
-      _this.currentDropCat=null;
+      if(_this.newCatHasBeenCreated && !_this.dragInCatEnabled) {
+        //debugger;
+      } else {
+        var nextSibling = _this.currentDropCat.data('next-sibling');
+        if (nextSibling && nextSibling.length) {
+          _this.currentDropCat.insertBefore(nextSibling);
+        } else {
+          _this.currentZone.append(_this.currentDropCat);
+        }
+        if(_this.dragInCatEnabled) {
+          $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
+        }
+      }
+
+      _this.currentZone = null;
+      _this.currentDropCat = null;
+      _this.newCatHasBeenCreated = false;
+      _this.dragInCatEnabled = true;
+
     }
   },
 
@@ -51,12 +66,13 @@ Droppopin.prototype = {
     this.zones.drop("start", function (ev, dd) {
       var drag = $(dd.drag);
       var zone = $(dd.target);
-      if(_this.currentZone && _this.currentZone.data('zone-id') == zone.data('zone-id')) return;
+      if (_this.currentZone && _this.currentZone.data('zone-id') == zone.data('zone-id')) return;
 
       var foundCat = zone.find('[data-id=' + drag.data('draggable-type') + ']');
       if (!foundCat.length) {
         foundCat = $(dd.drag).data('original-parent').clone(true);
         foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
+        _this.newCatHasBeenCreated = true;
       } else {
         foundCat = foundCat.parents('.treedrag-draggable').eq(0);
         foundCat.data('next-sibling', foundCat.next());
@@ -85,8 +101,15 @@ Droppopin.prototype = {
   },
 
   createPopin: function () {
+    var _this = this;
     if (!this.popin) {
       this.popin = $('<div class="treedrag_droppopin"></div>').hide();
+      this.popin.mouseenter(function () {
+        _this.dragInCatEnabled = true;
+      });
+      this.popin.mouseleave(function () {
+        _this.dragInCatEnabled = false;
+      });
     }
   }
 };
