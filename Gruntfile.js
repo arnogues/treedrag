@@ -61,59 +61,38 @@ module.exports = function (grunt) {
 					}
 				]
 			}
+
 		},
 
 		'useminPrepare': {
 			html: 'app/index.html',
-			options: {
-				dest: 'dist'
-			}
-
-		},
-
-		'usemin': {
-			html: ['dist/*.html'],
-			options: {
-				dirs: ["dist"]
-			}
-		},
-
-		concat: {
-			treedrag: {
-				options: {
-					process:function(src, filepath){
-            var template = grunt.file.read('build.template.txt');
-            return grunt.template.process(template, { data:{file:src }});
-          }
-				},
-				files: {
-					'dist/script/jquery.treedrag.js': ['dist/script/jquery.treedrag.js']
-				}
-			}
-
-		},
-		uglify: {
-			treedrag: {
-				files: {
-					'dist/script/jquery.treedrag.min.js': ['dist/script/jquery.treedrag.js']
-				}
-			}
-		},
-
-    directives: {
       options: {
-        // Task-specific options go here.
-      },
-      your_target: {
-        // Target-specific file lists and/or options go here.
+        dest: 'dist'
       }
+		},
+
+    usemin: {
+      options: {
+        assetsDirs: ['dist']
+      },
+      html: ['dest/{,*/}*.html'],
+      css: ['css/{,*/}*.css']
     },
+
 
 		// Run: `grunt watch` from command line for this section to take effect
 		watch: {
 			files: ['./app/**/*'],
 			tasks: ''
-		}
+		},
+
+    uglify:{
+      options:{
+        compress:{},
+        beautify:true,
+        preserveComments:'all'
+      }
+    }
 		/*  open: {
 		 dev: {
 		 url: 'http://localhost:<%= connect.server.options.port %>',
@@ -127,5 +106,5 @@ module.exports = function (grunt) {
 	//grunt.registerTask('default', ['clean', 'connect', 'build', /* 'open:dev', */'watch']);
 	grunt.registerTask('default', ['connect', 'watch']);
 
-	grunt.registerTask('build', ['clean:dist', 'copy', 'useminPrepare', 'concat', 'usemin', 'concat:treedrag', 'uglify:treedrag']);
+	grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'concat', 'uglify', 'copy','usemin']);
 };
