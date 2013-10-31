@@ -45,15 +45,7 @@ DragDrop.prototype = {
   addEvents: function () {
 		var _this = this;
 
-		this.items.drag('init', $.proxy(this.onDragInit, this));
-		this.items.drag('start', $.proxy(this.onDragStart, this));
-		this.items.drag($.proxy(this.onDrag, this));
-		this.items.drag('end', $.proxy(this.onDragEnd, this));
-
-		this.items.drop('init', $.proxy(this.onDropInit, this));
-		this.items.drop('start', $.proxy(this.onDropStart, this));
-		this.items.drop($.proxy(this.onDrop, this));
-		this.items.drop('end', $.proxy(this.onDropEnd, this));
+    this.addDropEvents();
 
 		$.drop({
 			multi : true,
@@ -67,6 +59,22 @@ DragDrop.prototype = {
 		 }
 		 });*/
 	},
+
+  removeDropEvents:function() {
+    this.items.off('draginit dragstart drag dragend dropinit dropstart drop dropend');
+  },
+
+  addDropEvents:function() {
+    this.items.drag('init', $.proxy(this.onDragInit, this));
+    this.items.drag('start', $.proxy(this.onDragStart, this));
+    this.items.drag($.proxy(this.onDrag, this));
+    this.items.drag('end', $.proxy(this.onDragEnd, this));
+
+    this.items.drop('init', $.proxy(this.onDropInit, this));
+    this.items.drop('start', $.proxy(this.onDropStart, this));
+    this.items.drop($.proxy(this.onDrop, this));
+    this.items.drop('end', $.proxy(this.onDropEnd, this));
+  },
 
 	// =============
 	// DRAG methods

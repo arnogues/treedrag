@@ -18,20 +18,21 @@ Droppopin.prototype = {
     this.zones.append('<div class="treedrag-zone-fog"></div>');
     this.addEvents();
     this.overrideDragDrop = $.proxy(this.overrideDragDrop, this);
+
   },
 
+  dragdropResetEvents: function() {
+    this.dragdropInstance.removeDropEvents();
+    this.dragdropInstance.addDropEvents();
+  },
 
-  overrideDragDrop: function (treedrag) {
+  overrideDragDrop: function (dragDropInstance) {
+    this.dragdropInstance = dragDropInstance;
     var _this = this;
-    treedrag.old_onDragEnd = treedrag.onDragEnd;
-    treedrag.onDragEnd = function (ev, dd) {
-      treedrag.old_onDragEnd(ev, dd);
+    dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
+    dragDropInstance.onDragEnd = function (ev, dd) {
+      dragDropInstance.old_onDragEnd(ev, dd);
       _this.close();
-
-
-      if (_this.dragInCatEnabled) {
-
-      }
 
       if(_this.newCatHasBeenCreated && !_this.dragInCatEnabled) {
         //debugger;
@@ -44,6 +45,10 @@ Droppopin.prototype = {
         }
         if(_this.dragInCatEnabled) {
           $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
+          $(dd.drag).css({
+            left:'auto',
+            top:'auto'
+          });
         }
       }
 
