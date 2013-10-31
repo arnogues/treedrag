@@ -196,9 +196,10 @@ DragDrop.prototype = {
   },
 
   setElemPos: function (elm, dd) {
+    var pos = this.$element.offset();
 		elm.css({
-			top: dd.offsetY,
-			left: dd.offsetX
+			top: dd.offsetY - pos.top,
+			left: dd.offsetX - pos.left
 		})
 	}
 };
