@@ -3,6 +3,8 @@
  *
  * This class plays with the elements setted previously by the PropertiesSetter class
  * It uses draggable and droppable properties
+ *
+ * draginit > dropinit > dragstart > drag > dropstart > drop > dropend > dragend
  */
 
 var DragDrop = function () {
@@ -37,29 +39,33 @@ DragDrop.prototype = {
   afterInit: function () {
 
   },
-
-  getItems:function() {
-    this.items = this.$element.find('li');
-  },
-
-  addEvents: function () {
-		var _this = this;
-
-    this.addDropEvents();
-
-		$.drop({
-			multi : true,
-			mode:true
-		});
-		/*$.drop({
-		 tolerance: function (event, proxy, target) {
-		 var test = event.pageY > ( target.top + target.height / 2 );
-		 $.data(target.elem, "drop+reorder", test ? "insertAfter" : "insertBefore");
-		 return this.contains(target, [ event.pageX, event.pageY ]);
-		 }
-		 });*/
+	refreshEmptyDroppable: function(){
+		this.emptyDroppables = this.$element.find('li.'+this.options.emptyDropableClassName);
 	},
 
+
+    getItems:function() {
+      this.items = this.$element.find('li');
+    },
+
+    addEvents: function () {
+      var _this = this;
+
+      this.addDropEvents();
+
+      $.drop({
+        multi : true,
+        mode:true
+      });
+      /*$.drop({
+       tolerance: function (event, proxy, target) {
+       var test = event.pageY > ( target.top + target.height / 2 );
+       $.data(target.elem, "drop+reorder", test ? "insertAfter" : "insertBefore");
+       return this.contains(target, [ event.pageX, event.pageY ]);
+       }
+       });*/
+    },
+    
   removeDropEvents:function() {
     this.items.unbind('draginit dragstart drag dragend dropinit dropstart drop dropend');
   },
@@ -142,9 +148,11 @@ DragDrop.prototype = {
 			//  	console.log('En dessus!', droped, draged);
 				draged.insertBefore(droped);
 				break;
+
+			//No default, so do nothing
 		}
 
-		//Empty gestion
+		//Empty gestion Hide and replace at the end
 		this.emptyDroppables.removeClass('active');
 		this.emptyDroppables.each(function(){
 			$(this).appendTo($(this).parent());
@@ -167,8 +175,6 @@ DragDrop.prototype = {
 		//console.log(dd.target)
 		var currentTarget = $(dd.target);
 		currentTarget.addClass('dropHover');
-		/*currentTarget.parent().find('> .empty-droppable')
-        .insertBefore(currentTarget).addClass('dropHover');*/
 	},
 
 	onDropEnd: function (ev, dd) {

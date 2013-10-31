@@ -25,8 +25,7 @@ Treedrag.prototype = {
 		this.install();
 		this.addEvents();
 
-		this.options.onInit.apply(this);
-
+		this.options.onInit.call(this);
 	},
 
 	install: function () {
@@ -37,6 +36,7 @@ Treedrag.prototype = {
 				zoneId: this.zoneId
 			});
       _this.dragInitialiazer = new DragInitializer(this, options);
+      $(this).data('DragInitializer', _this.dragInitialiazer);
     });
 
     switch (this.options.mode) {
@@ -51,6 +51,9 @@ Treedrag.prototype = {
       default :
         this.dragdrop = new DragDrop(this.$element, this.options);
     }
+
+    this.$element.data('DragDrop', this.dragdrop);
+
     this.toggler = new Toggler(this.$element);
   },
 
@@ -58,8 +61,42 @@ Treedrag.prototype = {
 
 	},
 
-	merge: function(){
+	merge: function(elements, into){
+//		console.log('merge', elements, into);
+		var ul = '<ul></ul>',
+			level = into.element.data('level') + 1,
+			emptySibling = into.element.parent().find('.empty-droppable');
 
+		if(into.element.find('ul').length){
+			ul = into.element.find('ul');
+		}else{
+			ul = into.element.append(ul).find('ul');
+		}
+
+		for (var i = 0, l = elements.length; i < l; i++) {
+			var element = elements[i].element;
+			element.data('level', level);
+			ul.append(elements[i].element);
+		}
+
+		if(!ul.find('.empty-droppable').length){
+			var empty = emptySibling.clone();
+			ul.append(empty);
+			this.$element.data('DragDrop').refreshEmptyDroppable();
+			this.$element.data('DragDrop').addEvents(empty);
+		}
+
+
+		var dragZone = into.element.closest('.treedrag-zone');
+		dragZone.data('DragInitializer').applyProperties(into.element, level);
+
+		/*elements.each(function(){
+			ul += this;
+		});
+
+		ul += '</ul>';
+
+		into.append(ul);*/
 	}
 };
 

@@ -211,16 +211,10 @@
 
             },
             onInit: function(){
-                $(this.options.notifListener).bind('prompt_submit', function(e, prompts, selected){
-                    console.log(prompts, selected)
-                    /*for (var i = 0, l = prompts.length; i < l; i++) {
-                        if(prompts[i] && prompts[i].value == selected){
-
-                            break;
-                        }
-                    }*/
+                $(this.options.notifListener).bind('prompt_submit', $.proxy(function(e, unSelectedElement, selectedElement, allElements){
+                    this.merge(unSelectedElement, selectedElement);
                     $('body').trigger('fluidPopin_close');
-                });
+                }, this));
             }
         });
 
