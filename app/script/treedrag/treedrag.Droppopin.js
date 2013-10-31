@@ -47,7 +47,6 @@ Droppopin.prototype = {
 
     dragDropInstance.old_onDropInit = dragDropInstance.onDropInit;
     dragDropInstance.onDropInit = function (ev, dd) {
-      //var dragType = $(dd.drag).data("draggable-type");
 
       var parents = $(dd.drag).parents();
       var isparent = jQuery.inArray(dd.target,parents) > -1;
@@ -68,10 +67,7 @@ Droppopin.prototype = {
       _this.dragdropInstance.phantom.insertBefore(dd.target);
       console.log(dd.drop, $(dd.target).data('id'));
     };
-/*
-    dragDropInstance.onDrop = function (ev, dd) {
-      console.log(dd.drop, $(dd.drop).data('id'));
-    };*/
+
 
 
 
@@ -153,13 +149,19 @@ Droppopin.prototype = {
       _this.currentDropCat = null;
       _this.newCatHasBeenCreated = false;
       _this.dragdropInstance.dragdropResetEvents();
+
+      _this.dragdropInstance.items.css({
+        left:'',
+        top:'',
+        width:''
+      })
     }
   },
 
   resetZonesIds: function () {
     this.zones.each(function () {
       var zone = $(this);
-      zone.find('[data-zone-id]').attr('data-zone-id', zone.attr('data-zone-id'));
+      zone.find('[data-zone-id]').data('zone-id', zone.data('zone-id'));
     });
   },
 
@@ -169,9 +171,10 @@ Droppopin.prototype = {
     //this.zones.unbind('dropinit');
 
     this.zones.drop('init', function (ev, dd) {
-      var result = $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
-      console.log("zone drop init", $(dd.drag).data('zone-id'),$(dd.target).data('zone-id'),dd.drag);
-      return  $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
+      var rule = $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
+      //console.log("zone drop init", $(dd.drag).data('zone-id'),$(dd.target).data('zone-id'),dd.drag);
+      console.log(rule, $(dd.drag).data('zone-id'), $(dd.target).data('zone-id'));
+      return  rule;
     });
 
   }
