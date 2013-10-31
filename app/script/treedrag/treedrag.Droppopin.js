@@ -112,7 +112,6 @@ Droppopin.prototype = {
                 originalCat = _this.dragdropInstance.phantom.parents('.treedrag-draggable').eq(0);
                 foundCat = originalCat.clone(true);
                 foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
-
               }
               zone.append(foundCat);
               foundCat.data('zone-id', zone.data('zone-id'));
@@ -132,12 +131,14 @@ Droppopin.prototype = {
             originalCat.detach();
           }
         }
+        _this.resetZonesIds();
       } else {
         var draged = $(dd.target);
         //Restor style
         draged.css('width', '');
         //Restor element
         _this.dragdropInstance.phantom.replaceWith(draged);
+        _this.resetZonesIds();
       }
 
       _this.zones.find('.empty-droppable')
@@ -158,17 +159,18 @@ Droppopin.prototype = {
   resetZonesIds: function () {
     this.zones.each(function () {
       var zone = $(this);
-      zone.find('[data-zone-id]').attr('data-zone-id', zone.attr('data-id'));
+      zone.find('[data-zone-id]').attr('data-zone-id', zone.attr('data-zone-id'));
     });
   },
 
 
   addEvents: function () {
     var _this = this;
-    this.zones.unbind('dropinit dropstart');
+    //this.zones.unbind('dropinit');
 
     this.zones.drop('init', function (ev, dd) {
-      _this.dragInProgress = true;
+      var result = $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
+      console.log("zone drop init", $(dd.drag).data('zone-id'),$(dd.target).data('zone-id'),dd.drag);
       return  $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
     });
 
