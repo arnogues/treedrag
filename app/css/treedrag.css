@@ -75,6 +75,10 @@ body {
     zoom: 1;
 }
 
+h3{
+	padding-bottom: 10px;
+}
+
 /** orange triangle */
 .treedrag .dragLevel1 h2:before {
     content: "";
@@ -133,15 +137,14 @@ body {
 	display: block;
 	height: 0;
 	background: #DDD;
-	-webkit-transition: all linear 50ms;
 }
 
 .empty-droppable.active{
 	height: 30px;
 }
 
-.empty-droppable.dropHover{
-	background: red;
+.dropHover{
+	background: red !important;
 }
 
 .treedrag .fp-fog{

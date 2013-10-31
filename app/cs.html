@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Treedrag</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/cs.css"/>
+    <link rel="stylesheet" href="css/fluid-popin.css"/>
+
+    <!-- build:js vendor/jquery-1.10.2.min.js -->
+    <script src="vendor/jquery-1.10.2.js"></script>
+    <!-- endbuild -->
+    <!-- build:js vendor/jquery.event.drapdrop-2.2.min.js -->
+    <script src="vendor/jquery.event.drapdrop/jquery.event.drag-2.2.js"></script>
+    <script src="vendor/jquery.event.drapdrop/jquery.event.drag.live-2.2.js"></script>
+    <script src="vendor/jquery.event.drapdrop/jquery.event.drop-2.2.js"></script>
+    <script src="vendor/jquery.event.drapdrop/jquery.event.drop.live-2.2.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js script/jquery.treedrag.js -->
+    <script src="script/treedrag/treedrag.package.js"></script>
+    <script src="script/treedrag/treedrag.DragDrop.js"></script>
+    <script src="script/treedrag/treedrag.Toggler.js"></script>
+    <script src="script/treedrag/treedrag.DragInitializer.js"></script>
+    <script src="script/treedrag/treedrag.Treedrag.js"></script>
+    <script src="script/treedrag/treedrag.Droppopin.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js script/jquery.treedrag.plugins.js -->
+    <script src="script/plugins/fluid-popin.js"></script>
+    <script src="script/plugins/prompt.js"></script>
+    <!-- endbuild -->
+
+    <style>
+        li[data-id="sub1.1.1"] {
+            background: red !important;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="treedrag" id="treedrag">
+    <ul>
+        <li>
+            <span>CLIO III Société</span>
+            <ul>
+                <li><span>CLIO II</span></li>
+                <li><span>CLIO I</span></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript" src="script/plugins/generate.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#treedrag").generateBlockDrag({});
+    })
+</script>
+
+</body>
+</html>

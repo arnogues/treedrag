@@ -58,8 +58,20 @@
 			if(this.options.preventSubmit){
 				e.preventDefault();
 			}
-			var val = this.element.serializeArray();
-			$(this.options.notifListener).trigger(pluginName + '_submit', [this.promptListValues, val[0].value]);
+			var selectedInForm = this.element.serializeArray(),
+				selectedElement, unSelectedElement = [];
+
+			unSelectedElement = unSelectedElement.concat(this.promptListValues);
+
+			for (var i = 0, l = this.promptListValues.length; i < l; i++) {
+				if(this.promptListValues[i].value == selectedInForm[0].value){
+					selectedElement = this.promptListValues[i];
+					unSelectedElement.splice(i, 1);
+				}
+			}
+//			console.log(selectedElement, unSelectedElement, this.promptListValues);
+
+			$(this.options.notifListener).trigger(pluginName + '_submit', [unSelectedElement, selectedElement, this.promptListValues]);
 		},
 		_onChange: function(){
 			this._activateButton();
