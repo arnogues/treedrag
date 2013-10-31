@@ -45,7 +45,7 @@ Treedrag.prototype = {
           zones:this.zones
         });
         this.dragdrop = new DragDrop(this.$element, $.extend(this.options, {
-          overrideMethod : this.droppopin.override
+          overrideFunction : this.droppopin.overrideDragDrop
         }));
         break;
       default :

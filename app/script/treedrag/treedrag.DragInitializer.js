@@ -33,7 +33,7 @@ DragInitializer.prototype = {
 		if (!$ul.data('id')) {
 			$ul.attr('data-id', 'droppable_' + (id || $ul.attr('id') || '0'));
 		}
-		var newLevel = this.options.limitToParent ? $ul.data('id') + '_' + level : level;
+		var newLevel = this.options.limitToParent ? $ul.data('id')/* + '_' + level */: level;
 
 		//.addClass('treedrag-droppable');
 		$ul.children().each(function (i, el) {
