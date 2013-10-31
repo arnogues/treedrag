@@ -22,21 +22,21 @@ Droppopin.prototype = {
     this.dragdropInstance = dragDropInstance;
     var _this = this;
 
-   // dragDropInstance.old_onDragInit = dragDropInstance.onDragInit;
+    // dragDropInstance.old_onDragInit = dragDropInstance.onDragInit;
     dragDropInstance.onDragInit = function (ev, dd) {
-      if(this.options.restrictDropLevel){
+      if (this.options.restrictDropLevel) {
         var currentLevel = this.currentLevel = $(dd.drag).data('level');
         this.emptyTarget = this.emptyDroppables.filter(function () {
           return $(this).data('level') == currentLevel;
         });
-      }else{
+      } else {
         this.emptyTarget = this.emptyDroppables;
       }
       $(dd.drag).data('original-parent', $(dd.drag).parents('.treedrag-draggable').eq(0));
     };
 
     dragDropInstance.old_onDragStart = dragDropInstance.onDragStart;
-    dragDropInstance.onDragStart  = function (ev, dd) {
+    dragDropInstance.onDragStart = function (ev, dd) {
       var $elm = $(dd.drag);
       dragDropInstance.createPhantom($elm);
       dragDropInstance.setElemPos($elm, dd);
@@ -49,7 +49,7 @@ Droppopin.prototype = {
     dragDropInstance.onDropInit = function (ev, dd) {
 
       var parents = $(dd.drag).parents();
-      var isparent = jQuery.inArray(dd.target,parents) > -1;
+      var isparent = jQuery.inArray(dd.target, parents) > -1;
       var rule = dd.drag != dd.target
           && $(dd.drag).data('zone-id') == $(dd.target).data('zone-id')
           && $(dd.drag).data('level') == $(dd.target).data('level')
@@ -64,8 +64,6 @@ Droppopin.prototype = {
     dragDropInstance.onDropStart = function (ev, dd) {
       _this.dragdropInstance.phantom.insertBefore(dd.target);
     };
-
-
 
 
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
@@ -98,8 +96,8 @@ Droppopin.prototype = {
               // on laisse une copie sur la zone en cours, cela permet de garder tous les events sans se prendre la tête
 
               //on verifie si on a pas déjà une ancienne categorie
-              var oldCat = zone.data('savedcat-' +  drag.data('draggable-type'));
-              if(oldCat) {
+              var oldCat = zone.data('savedcat-' + drag.data('draggable-type'));
+              if (oldCat) {
                 foundCat = oldCat;
               } else {
                 originalCat = _this.dragdropInstance.phantom.parents('.treedrag-draggable').eq(0);
@@ -115,15 +113,23 @@ Droppopin.prototype = {
         }
         drag.data('zone-id', zone.data('zone-id'));
 
-        _this.dragdropInstance.phantom.remove();
 
-        if(originalCat && originalCat.length)  {
+        if (!originalCat) {
+          originalCat = _this.dragdropInstance.phantom.parents('.treedrag-draggable').eq(0);
+        }
+        if (originalCat.length) {
+          _this.dragdropInstance.phantom.remove();
+
           var originalCatChildren = originalCat.find('ul:first').children('li').not('.empty-droppable');
-          if(originalCatChildren.length==0) {
+          if (originalCatChildren.length == 0) {
             zone.data('savedcat-' + originalCat.data('id'), originalCat);
             originalCat.detach();
           }
+        } else {
+          _this.dragdropInstance.phantom.remove();
         }
+
+
         _this.resetZonesIds();
       } else {
         var draged = $(dd.target);
@@ -148,9 +154,9 @@ Droppopin.prototype = {
       _this.dragdropInstance.dragdropResetEvents();
 
       _this.dragdropInstance.items.css({
-        left:'',
-        top:'',
-        width:''
+        left: '',
+        top: '',
+        width: ''
       })
     }
   },
