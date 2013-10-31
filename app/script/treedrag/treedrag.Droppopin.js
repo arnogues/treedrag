@@ -57,15 +57,12 @@ Droppopin.prototype = {
           && !isparent; // && (dragType == $(dd.target).data('id') || dragType == $(dd.target).data("droppable-accept"));
 
 
-     /* if($(dd.target).data('draggable-type')== $(dd.drag).data('draggable-type'))
-        console.log(rule,$(dd.drag).data('draggable-type'), $(dd.target).data('draggable-type'),dd.target);*/
       return  rule;
     };
 
     dragDropInstance.old_onDropStart = dragDropInstance.onDropStart;
     dragDropInstance.onDropStart = function (ev, dd) {
       _this.dragdropInstance.phantom.insertBefore(dd.target);
-      console.log(dd.drop, $(dd.target).data('id'));
     };
 
 
@@ -172,8 +169,6 @@ Droppopin.prototype = {
 
     this.zones.drop('init', function (ev, dd) {
       var rule = $(dd.drag).data('zone-id') != $(dd.target).data('zone-id');
-      //console.log("zone drop init", $(dd.drag).data('zone-id'),$(dd.target).data('zone-id'),dd.drag);
-      console.log(rule, $(dd.drag).data('zone-id'), $(dd.target).data('zone-id'));
       return  rule;
     });
 
