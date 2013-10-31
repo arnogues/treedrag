@@ -32,6 +32,7 @@ Droppopin.prototype = {
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
     dragDropInstance.onDragEnd = function (ev, dd) {
       var foundCat;
+      var originalCat;
       var drag = $(dd.drag);
       var zone = $(dd.drop);
       /*  var draged = $(dd.target);
@@ -68,8 +69,10 @@ Droppopin.prototype = {
               if(oldCat) {
                 foundCat = oldCat;
               } else {
-                foundCat = _this.dragdropInstance.phantom.parents('.treedrag-draggable').eq(0).clone(true);
+                originalCat = _this.dragdropInstance.phantom.parents('.treedrag-draggable').eq(0);
+                foundCat = originalCat.clone(true);
                 foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
+
               }
               zone.append(foundCat);
               foundCat.data('zone-id', zone.data('zone-id'));
@@ -81,6 +84,14 @@ Droppopin.prototype = {
         drag.data('zone-id', zone.data('zone-id'));
 
         _this.dragdropInstance.phantom.remove();
+
+        if(originalCat && originalCat.length)  {
+          var originalCatChildren = originalCat.find('ul:first').children('li').not('.empty-droppable');
+          if(originalCatChildren.length==0) {
+            zone.data('savedcat-' + originalCat.data('id'), originalCat);
+            originalCat.detach();
+          }
+        }
       } else {
         var draged = $(dd.target);
         //Restor style
