@@ -14,14 +14,13 @@ Droppopin.prototype = {
   init: function (options) {
     this.options = $.extend(true, {}, this.options, options);
     this.zones = this.options.zones;
-
     this.zones.append('<div class="treedrag-zone-fog"></div>');
     this.addEvents();
+    this.createPopin();
     this.overrideDragDrop = $.proxy(this.overrideDragDrop, this);
-
   },
 
-  dragdropResetEvents: function() {
+  dragdropResetEvents: function () {
     this.dragdropInstance.removeDropEvents();
     this.dragdropInstance.addDropEvents();
   },
@@ -32,25 +31,29 @@ Droppopin.prototype = {
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
     dragDropInstance.onDragEnd = function (ev, dd) {
       dragDropInstance.old_onDragEnd(ev, dd);
-      _this.close();
 
-      if(_this.newCatHasBeenCreated && !_this.dragInCatEnabled) {
+
+      if (_this.newCatHasBeenCreated) {
         //debugger;
       } else {
-        var nextSibling = _this.currentDropCat.data('next-sibling');
-        if (nextSibling && nextSibling.length) {
-          _this.currentDropCat.insertBefore(nextSibling);
-        } else {
-          _this.currentZone.append(_this.currentDropCat);
-        }
-        if(_this.dragInCatEnabled) {
-          $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
-          $(dd.drag).css({
-            left:'auto',
-            top:'auto'
-          });
+        if (_this.currentDropCat) {
+          var nextSibling = _this.currentDropCat.data('next-sibling');
+          if (nextSibling && nextSibling.length) {
+            _this.currentDropCat.insertBefore(nextSibling);
+          } else {
+            _this.currentZone.append(_this.currentDropCat);
+          }
+          if (_this.dragInCatEnabled) {
+            $(dd.drag).insertBefore(_this.currentDropCat.find('.empty-droppable'));
+            $(dd.drag).css({
+              left: 'auto',
+              top: 'auto'
+            });
+          }
         }
       }
+
+      _this.close();
 
       _this.currentZone = null;
       _this.currentDropCat = null;
@@ -58,6 +61,13 @@ Droppopin.prototype = {
       _this.dragInCatEnabled = true;
 
     }
+  },
+
+  resetZonesIds: function () {
+    this.zones.each(function () {
+      var zone = $(this);
+      zone.find('[data-zone-id').attr('data-zone-id', zone.data('id'));
+    });
   },
 
 
@@ -75,7 +85,7 @@ Droppopin.prototype = {
 
       var foundCat = zone.find('[data-id=' + drag.data('draggable-type') + ']');
       if (!foundCat.length) {
-        foundCat = $(dd.drag).data('original-parent').clone(true);
+        foundCat = $(dd.drag).data('original-parent').clone(true, true);
         foundCat.find('ul:first').children('li').not('.empty-droppable').remove();
         _this.newCatHasBeenCreated = true;
       } else {
@@ -91,7 +101,6 @@ Droppopin.prototype = {
 
 
   open: function (zone, dropParent) {
-    this.createPopin();
     $(zone).append(this.popin);
     this.popin.show();
     this.zones.removeClass('zone-isdraggable');
@@ -109,12 +118,19 @@ Droppopin.prototype = {
     var _this = this;
     if (!this.popin) {
       this.popin = $('<div class="treedrag_droppopin"></div>').hide();
-      this.popin.mouseenter(function () {
-        _this.dragInCatEnabled = true;
-      });
-      this.popin.mouseleave(function () {
-        _this.dragInCatEnabled = false;
-      });
+      /* this.popin.mouseenter(function () {
+       _this.dragInCatEnabled = true;
+       });*/
+      /* this.popin.mouseleave(function () {
+       _this.dragInCatEnabled = false;
+       });
+       this.popin.drop('init',function(ev,dd) {
+       console.log("pouet");
+       return true;
+       });
+       this.popin.drop(function(ev,dd) {
+       console.log("popin drop start");
+       });*/
     }
   }
 };
