@@ -163,7 +163,7 @@ DragDrop.prototype = {
 	},
 
 	onDropStart: function (ev, dd) {
-		console.log('onDropStart, target: ',dd.target, ', drag: ', dd.drag)
+		console.log('onDropStart, target: ',dd.target, ', drag: ', dd.drag);
 		//console.log(dd.target)
 		var currentTarget = $(dd.target);
 		currentTarget.addClass('dropHover');
