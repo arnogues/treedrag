@@ -62,8 +62,28 @@ Droppopin.prototype = {
 
     dragDropInstance.old_onDropStart = dragDropInstance.onDropStart;
     dragDropInstance.onDropStart = function (ev, dd) {
-      _this.dragdropInstance.phantom.insertBefore(dd.target);
+		/*console.log(dd)
+//		console.log(dd.target, $(dd.target).siblings(), $(dd.target).parent().find('li:not(.treedrag-phantom)').index($(dd.target)))
+		if($(dd.target).parent().find('li:not(.treedrag-phantom)').index($(dd.target)) == 0){
+			_this.dragdropInstance.phantom.insertBefore(dd.target);
+
+		}else{
+			_this.dragdropInstance.phantom.insertAfter(dd.target);
+
+		}*/
     };
+
+	  dragDropInstance.onDrag = function (ev, dd) {
+		  this.setElemPos($(dd.drag), dd);
+
+		  if(!( dd.drop[0] == dd.drag || $(dd.drop).data('level') != $(dd.drag).data('level'))){
+			  if(dd.drop.length &&  ev.pageY > (parseInt($(dd.drop).offset().top, 10) + parseInt($(dd.drop).height()/2, 10))){
+				  _this.dragdropInstance.phantom.insertAfter(dd.drop);
+			  }else if(dd.drop.length){
+				  _this.dragdropInstance.phantom.insertBefore(dd.drop);
+			  }
+		  }
+	  },
 
 
     dragDropInstance.old_onDragEnd = dragDropInstance.onDragEnd;
