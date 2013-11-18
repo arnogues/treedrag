@@ -52,6 +52,10 @@ DragInitializer.prototype = {
 			if (firstUl.length) {
 				_this.applyProperties(firstUl, level + 1, id);
 			}
+
+			if(level == 1 && !$(this).find('li:not(.empty-droppable)').length){
+				$(this).css('display', 'none');
+			}
 		});
 
 		if (!$ul.data('treedrag-empty-droppable')) {
