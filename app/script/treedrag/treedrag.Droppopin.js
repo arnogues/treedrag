@@ -103,6 +103,7 @@ Droppopin.prototype = {
               foundCat.find('> ul').append(catChildren);
               drag.detach();
               zone.data('savedcat-' + drag.data('id'), drag);
+				foundCat.css('display', 'block');
             } else {
               zone.find('ul:first').append(drag);
             }
